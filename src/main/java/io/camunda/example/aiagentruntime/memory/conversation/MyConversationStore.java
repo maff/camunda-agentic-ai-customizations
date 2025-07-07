@@ -7,6 +7,7 @@ import io.camunda.connector.agenticai.aiagent.model.AgentContext;
 import io.camunda.connector.agenticai.aiagent.model.AgentResponse;
 import io.camunda.connector.api.outbound.OutboundConnectorContext;
 import io.camunda.example.aiagentruntime.memory.conversation.entity.MyConversationRepository;
+import io.camunda.example.aiagentruntime.memory.conversation.entity.ProcessContext;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +39,14 @@ public class MyConversationStore extends BaseConversationStore<MyConversationCon
       OutboundConnectorContext outboundConnectorContext,
       AgentContext agentContext,
       MyConversationContext previousConversationContext) {
-    return new MyConversationStoreSession(repository, previousConversationContext);
+    final var jobContext = outboundConnectorContext.getJobContext();
+    final var processContext =
+        new ProcessContext(
+            String.valueOf(jobContext.getProcessDefinitionKey()),
+            String.valueOf(jobContext.getProcessInstanceKey()),
+            jobContext.getElementId(),
+            String.valueOf(jobContext.getElementInstanceKey()));
+
+    return new MyConversationStoreSession(repository, processContext, previousConversationContext);
   }
 }

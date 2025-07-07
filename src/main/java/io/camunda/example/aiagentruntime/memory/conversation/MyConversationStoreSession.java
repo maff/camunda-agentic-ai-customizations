@@ -5,19 +5,22 @@ import io.camunda.connector.agenticai.aiagent.memory.runtime.RuntimeMemory;
 import io.camunda.connector.agenticai.aiagent.model.AgentContext;
 import io.camunda.example.aiagentruntime.memory.conversation.entity.MyConversation;
 import io.camunda.example.aiagentruntime.memory.conversation.entity.MyConversationRepository;
-
-import java.util.List;
+import io.camunda.example.aiagentruntime.memory.conversation.entity.ProcessContext;
 import java.util.UUID;
 
 public class MyConversationStoreSession implements ConversationStoreSession<MyConversationContext> {
 
   private final MyConversationRepository repository;
+  private final ProcessContext processContext;
   private final MyConversationContext previousConversationContext;
   private MyConversation previousConversation;
 
   public MyConversationStoreSession(
-      MyConversationRepository repository, MyConversationContext previousConversationContext) {
+      MyConversationRepository repository,
+      ProcessContext processContext,
+      MyConversationContext previousConversationContext) {
     this.repository = repository;
+    this.processContext = processContext;
     this.previousConversationContext = previousConversationContext;
   }
 
@@ -43,16 +46,17 @@ public class MyConversationStoreSession implements ConversationStoreSession<MyCo
   public AgentContext storeFromRuntimeMemory(
       AgentContext agentContext, RuntimeMemory runtimeMemory) {
 
-    final var conversation = new MyConversation();
-    conversation.setMessages(runtimeMemory.allMessages());
-
+    UUID conversationId;
     if (previousConversation != null) {
-      conversation.setConversationId(previousConversation.getConversationId());
+      conversationId = previousConversation.getConversationId();
       previousConversation.setArchived(true);
       repository.save(previousConversation);
     } else {
-      conversation.setConversationId(UUID.randomUUID());
+      conversationId = UUID.randomUUID();
     }
+
+    final var conversation = new MyConversation(conversationId, processContext);
+    conversation.setMessages(runtimeMemory.allMessages());
 
     repository.save(conversation);
     repository.flush();

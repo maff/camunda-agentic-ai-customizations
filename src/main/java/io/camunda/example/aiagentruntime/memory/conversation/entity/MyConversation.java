@@ -31,23 +31,42 @@ public class MyConversation {
   @Column(nullable = false)
   private UUID conversationId;
 
+  @JdbcTypeCode(SqlTypes.JSON)
   @Column(nullable = false)
-  private boolean archived;
+  private ProcessContext processContext;
+
+  @Column(nullable = false)
+  private boolean archived = false;
 
   @JdbcTypeCode(SqlTypes.JSON)
-  @Column(columnDefinition = "jsonb", nullable = false)
+  @Column(nullable = false)
   private List<Message> messages = new ArrayList<>();
+
+  protected MyConversation() {}
+
+  public MyConversation(UUID conversationId, ProcessContext processContext) {
+    this.conversationId = conversationId;
+    this.processContext = processContext;
+  }
 
   public UUID getId() {
     return id;
+  }
+
+  public ZonedDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+  public ZonedDateTime getUpdatedAt() {
+    return updatedAt;
   }
 
   public UUID getConversationId() {
     return conversationId;
   }
 
-  public void setConversationId(UUID conversationId) {
-    this.conversationId = conversationId;
+  public ProcessContext getProcessContext() {
+    return processContext;
   }
 
   public boolean isArchived() {
