@@ -4,3 +4,6 @@ server:
 spring:
   application:
     name: ai-agent-runtime
+  jpa:
+    hibernate:
+      ddl-auto: validate

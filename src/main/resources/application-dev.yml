@@ -9,14 +9,14 @@ camunda:
   connector:
     agenticai:
       aiagent:
-        enabled: false
+        enabled: true
       ad-hoc-tools-schema-resolver:
         enabled: false
       mcp:
         remote-client:
           enabled: false
         client:
-          enabled: true
+          enabled: false
           clients:
             time:
               enabled: false
