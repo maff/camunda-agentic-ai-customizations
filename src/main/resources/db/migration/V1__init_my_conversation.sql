@@ -1,11 +1,12 @@
 CREATE TABLE my_conversation
 (
-    id              UUID  NOT NULL,
+    id              UUID    NOT NULL,
     created_at      TIMESTAMP WITH TIME ZONE,
     updated_at      TIMESTAMP WITH TIME ZONE,
-    conversation_id UUID  NOT NULL,
+    conversation_id UUID    NOT NULL,
     parent_id       UUID,
-    messages        JSONB NOT NULL,
+    archived        BOOLEAN NOT NULL DEFAULT FALSE,
+    messages        JSONB   NOT NULL,
     CONSTRAINT pk_myconversation PRIMARY KEY (id)
 );
 

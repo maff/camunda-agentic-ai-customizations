@@ -3,12 +3,10 @@ package io.camunda.example.aiagentruntime.memory.conversation.entity;
 import io.camunda.connector.agenticai.model.message.Message;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -33,8 +31,8 @@ public class MyConversation {
   @Column(nullable = false)
   private UUID conversationId;
 
-  @OneToOne(fetch = FetchType.LAZY)
-  private MyConversation parent;
+  @Column(nullable = false)
+  private boolean archived;
 
   @JdbcTypeCode(SqlTypes.JSON)
   @Column(columnDefinition = "jsonb", nullable = false)
@@ -52,12 +50,12 @@ public class MyConversation {
     this.conversationId = conversationId;
   }
 
-  public MyConversation getParent() {
-    return parent;
+  public boolean isArchived() {
+    return archived;
   }
 
-  public void setParent(MyConversation parent) {
-    this.parent = parent;
+  public void setArchived(boolean archived) {
+    this.archived = archived;
   }
 
   public List<Message> getMessages() {
