@@ -1,6 +1,7 @@
 package io.camunda.example.aiagentruntime.memory.conversation;
 
-import io.camunda.connector.agenticai.aiagent.memory.conversation.ConversationStoreSession;
+import io.camunda.connector.agenticai.aiagent.memory.conversation.ConversationSession;
+import io.camunda.connector.agenticai.aiagent.memory.conversation.ConversationUtil;
 import io.camunda.connector.agenticai.aiagent.memory.runtime.RuntimeMemory;
 import io.camunda.connector.agenticai.aiagent.model.AgentContext;
 import io.camunda.example.aiagentruntime.memory.conversation.entity.MyConversation;
@@ -8,24 +9,23 @@ import io.camunda.example.aiagentruntime.memory.conversation.entity.MyConversati
 import io.camunda.example.aiagentruntime.memory.conversation.entity.ProcessContext;
 import java.util.UUID;
 
-public class MyConversationStoreSession implements ConversationStoreSession<MyConversationContext> {
+public class MyConversationSession implements ConversationSession {
 
   private final MyConversationRepository repository;
   private final ProcessContext processContext;
-  private final MyConversationContext previousConversationContext;
+
+  private MyConversationContext previousConversationContext;
   private MyConversation previousConversation;
 
-  public MyConversationStoreSession(
-      MyConversationRepository repository,
-      ProcessContext processContext,
-      MyConversationContext previousConversationContext) {
+  public MyConversationSession(MyConversationRepository repository, ProcessContext processContext) {
     this.repository = repository;
     this.processContext = processContext;
-    this.previousConversationContext = previousConversationContext;
   }
 
   @Override
-  public void loadIntoRuntimeMemory(RuntimeMemory runtimeMemory) {
+  public void loadIntoRuntimeMemory(AgentContext agentContext, RuntimeMemory runtimeMemory) {
+    previousConversationContext =
+        ConversationUtil.loadConversationContext(agentContext, MyConversationContext.class);
     if (previousConversationContext == null) {
       return;
     }

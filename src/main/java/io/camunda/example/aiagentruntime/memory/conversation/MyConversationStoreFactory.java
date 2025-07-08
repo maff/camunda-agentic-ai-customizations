@@ -1,9 +1,10 @@
 package io.camunda.example.aiagentruntime.memory.conversation;
 
-import io.camunda.connector.agenticai.aiagent.memory.conversation.ConversationContext;
 import io.camunda.connector.agenticai.aiagent.memory.conversation.ConversationStore;
 import io.camunda.connector.agenticai.aiagent.memory.conversation.ConversationStoreFactory;
+import io.camunda.connector.agenticai.aiagent.model.AgentContext;
 import io.camunda.connector.agenticai.aiagent.model.request.AgentRequest;
+import io.camunda.connector.api.outbound.OutboundConnectorContext;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -16,8 +17,10 @@ public class MyConversationStoreFactory implements ConversationStoreFactory {
   }
 
   @Override
-  public <C extends ConversationContext> ConversationStore<C> createConversationStore(
-      AgentRequest agentRequest) {
-    return (ConversationStore<C>) store;
+  public ConversationStore createConversationStore(
+      OutboundConnectorContext outboundConnectorContext,
+      AgentRequest agentRequest,
+      AgentContext agentContext) {
+    return store;
   }
 }

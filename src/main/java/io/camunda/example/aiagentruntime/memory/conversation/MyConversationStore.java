@@ -1,10 +1,10 @@
 package io.camunda.example.aiagentruntime.memory.conversation;
 
-import io.camunda.connector.agenticai.aiagent.memory.conversation.BaseConversationStore;
-import io.camunda.connector.agenticai.aiagent.memory.conversation.ConversationStoreSession;
-import io.camunda.connector.agenticai.aiagent.memory.conversation.ConversationStoreSessionHandler;
+import io.camunda.connector.agenticai.aiagent.memory.conversation.ConversationSessionHandler;
+import io.camunda.connector.agenticai.aiagent.memory.conversation.ConversationStore;
 import io.camunda.connector.agenticai.aiagent.model.AgentContext;
 import io.camunda.connector.agenticai.aiagent.model.AgentResponse;
+import io.camunda.connector.agenticai.aiagent.model.request.AgentRequest;
 import io.camunda.connector.api.outbound.OutboundConnectorContext;
 import io.camunda.example.aiagentruntime.memory.conversation.entity.MyConversationRepository;
 import io.camunda.example.aiagentruntime.memory.conversation.entity.ProcessContext;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
-public class MyConversationStore extends BaseConversationStore<MyConversationContext> {
+public class MyConversationStore implements ConversationStore {
 
   private final MyConversationRepository repository;
 
@@ -21,24 +21,12 @@ public class MyConversationStore extends BaseConversationStore<MyConversationCon
   }
 
   @Override
-  public Class<MyConversationContext> conversationContextClass() {
-    return MyConversationContext.class;
-  }
-
-  @Override
   @Transactional
   public AgentResponse executeInSession(
-      OutboundConnectorContext context,
-      AgentContext agentContext,
-      ConversationStoreSessionHandler<MyConversationContext> conversationStoreSessionHandler) {
-    return super.executeInSession(context, agentContext, conversationStoreSessionHandler);
-  }
-
-  @Override
-  protected ConversationStoreSession<MyConversationContext> createSession(
       OutboundConnectorContext outboundConnectorContext,
+      AgentRequest agentRequest,
       AgentContext agentContext,
-      MyConversationContext previousConversationContext) {
+      ConversationSessionHandler sessionHandler) {
     final var jobContext = outboundConnectorContext.getJobContext();
     final var processContext =
         new ProcessContext(
@@ -47,6 +35,8 @@ public class MyConversationStore extends BaseConversationStore<MyConversationCon
             jobContext.getElementId(),
             String.valueOf(jobContext.getElementInstanceKey()));
 
-    return new MyConversationStoreSession(repository, processContext, previousConversationContext);
+    final var session = new MyConversationSession(repository, processContext);
+
+    return sessionHandler.handleSession(session);
   }
 }
