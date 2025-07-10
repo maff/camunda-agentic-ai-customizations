@@ -1,7 +1,9 @@
-package io.camunda.example.aiagentruntime.memory.conversation.entity;
+package io.camunda.example.aiagentruntime.memory.conversation;
 
+import io.camunda.connector.agenticai.aiagent.model.AgentJobContext;
 import io.camunda.connector.agenticai.model.message.Message;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -33,7 +35,7 @@ public class MyConversation {
 
   @JdbcTypeCode(SqlTypes.JSON)
   @Column(nullable = false)
-  private ProcessContext processContext;
+  private MyConversationJobContext jobContext;
 
   @Column(nullable = false)
   private boolean archived = false;
@@ -44,9 +46,9 @@ public class MyConversation {
 
   protected MyConversation() {}
 
-  public MyConversation(UUID conversationId, ProcessContext processContext) {
+  public MyConversation(UUID conversationId, MyConversationJobContext jobContext) {
     this.conversationId = conversationId;
-    this.processContext = processContext;
+    this.jobContext = jobContext;
   }
 
   public UUID getId() {
@@ -65,8 +67,8 @@ public class MyConversation {
     return conversationId;
   }
 
-  public ProcessContext getProcessContext() {
-    return processContext;
+  public MyConversationJobContext getJobContext() {
+    return jobContext;
   }
 
   public boolean isArchived() {
@@ -83,5 +85,27 @@ public class MyConversation {
 
   public void setMessages(List<Message> messages) {
     this.messages = messages;
+  }
+
+  @Embeddable
+  public record MyConversationJobContext(
+      String bpmnProcessId,
+      long processDefinitionKey,
+      long processInstanceKey,
+      String elementId,
+      long elementInstanceKey,
+      String tenantId,
+      String type) {
+
+    public static MyConversationJobContext from(AgentJobContext jobContext) {
+      return new MyConversationJobContext(
+          jobContext.bpmnProcessId(),
+          jobContext.processDefinitionKey(),
+          jobContext.processInstanceKey(),
+          jobContext.elementId(),
+          jobContext.elementInstanceKey(),
+          jobContext.tenantId(),
+          jobContext.type());
+    }
   }
 }

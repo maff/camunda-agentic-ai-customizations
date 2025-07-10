@@ -4,9 +4,8 @@ import io.camunda.connector.agenticai.adhoctoolsschema.resolver.AdHocToolsSchema
 import io.camunda.connector.agenticai.aiagent.agent.AgentInitializationResult;
 import io.camunda.connector.agenticai.aiagent.agent.AgentInitializer;
 import io.camunda.connector.agenticai.aiagent.agent.AgentInitializerImpl;
-import io.camunda.connector.agenticai.aiagent.model.request.AgentRequest;
+import io.camunda.connector.agenticai.aiagent.model.AgentExecutionContext;
 import io.camunda.connector.agenticai.aiagent.tool.GatewayToolHandlerRegistry;
-import io.camunda.connector.api.outbound.OutboundConnectorContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -24,12 +23,13 @@ public class MyCustomAiAgentInitializer implements AgentInitializer {
   }
 
   @Override
-  public AgentInitializationResult initializeAgent(
-      OutboundConnectorContext outboundConnectorContext, AgentRequest agentRequest) {
+  public AgentInitializationResult initializeAgent(AgentExecutionContext executionContext) {
     LOGGER.info(
-        ">>> Initializing agent. Context: {}, Request: {}", outboundConnectorContext, agentRequest);
+        ">>> Initializing agent. Context: {}, Request: {}",
+        executionContext.jobContext(),
+        executionContext.request());
 
-    final var result = delegate.initializeAgent(outboundConnectorContext, agentRequest);
+    final var result = delegate.initializeAgent(executionContext);
 
     LOGGER.info("<<< Agent initialized. Result: {}", result);
 

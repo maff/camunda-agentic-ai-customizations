@@ -4,22 +4,21 @@ import io.camunda.connector.agenticai.aiagent.memory.conversation.ConversationSe
 import io.camunda.connector.agenticai.aiagent.memory.conversation.ConversationUtil;
 import io.camunda.connector.agenticai.aiagent.memory.runtime.RuntimeMemory;
 import io.camunda.connector.agenticai.aiagent.model.AgentContext;
-import io.camunda.example.aiagentruntime.memory.conversation.entity.MyConversation;
-import io.camunda.example.aiagentruntime.memory.conversation.entity.MyConversationRepository;
-import io.camunda.example.aiagentruntime.memory.conversation.entity.ProcessContext;
+import io.camunda.connector.agenticai.aiagent.model.AgentJobContext;
+import io.camunda.example.aiagentruntime.memory.conversation.MyConversation.MyConversationJobContext;
 import java.util.UUID;
 
 public class MyConversationSession implements ConversationSession {
 
   private final MyConversationRepository repository;
-  private final ProcessContext processContext;
+  private final AgentJobContext jobContext;
 
   private MyConversationContext previousConversationContext;
   private MyConversation previousConversation;
 
-  public MyConversationSession(MyConversationRepository repository, ProcessContext processContext) {
+  public MyConversationSession(MyConversationRepository repository, AgentJobContext jobContext) {
     this.repository = repository;
-    this.processContext = processContext;
+    this.jobContext = jobContext;
   }
 
   @Override
@@ -55,7 +54,8 @@ public class MyConversationSession implements ConversationSession {
       conversationId = UUID.randomUUID();
     }
 
-    final var conversation = new MyConversation(conversationId, processContext);
+    final var conversation =
+        new MyConversation(conversationId, MyConversationJobContext.from(jobContext));
     conversation.setMessages(runtimeMemory.allMessages());
 
     repository.save(conversation);

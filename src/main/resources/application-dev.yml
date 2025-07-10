@@ -15,18 +15,6 @@ camunda:
       mcp:
         remote-client:
           enabled: false
-        client:
-          enabled: false
-          clients:
-            time:
-              enabled: false
-              stio:
-                command:
-                  - 'docker'
-                  - 'run'
-                  - '-i'
-                  - '--rm'
-                  - 'mcp/time'
 
 logging:
   level:

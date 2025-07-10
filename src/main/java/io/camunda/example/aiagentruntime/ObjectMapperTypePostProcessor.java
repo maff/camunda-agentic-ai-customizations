@@ -12,13 +12,9 @@ public class ObjectMapperTypePostProcessor implements BeanPostProcessor {
   @Override
   public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
     if (bean instanceof ObjectMapper objectMapper) {
-      configureObjectMapper(objectMapper);
+      objectMapper.registerSubtypes(MyConversationContext.class);
     }
 
     return bean;
-  }
-
-  private void configureObjectMapper(ObjectMapper objectMapper) {
-    objectMapper.registerSubtypes(MyConversationContext.class);
   }
 }

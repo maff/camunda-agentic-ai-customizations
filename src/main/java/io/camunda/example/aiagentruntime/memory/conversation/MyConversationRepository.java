@@ -1,4 +1,4 @@
-package io.camunda.example.aiagentruntime.memory.conversation.entity;
+package io.camunda.example.aiagentruntime.memory.conversation;
 
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,0 +1,15 @@
+camunda:
+  connector:
+    agenticai:
+      mcp:
+        client:
+          enabled: true
+          clients:
+            time:
+              stio:
+                command:
+                  - 'docker'
+                  - 'run'
+                  - '-i'
+                  - '--rm'
+                  - 'mcp/time'

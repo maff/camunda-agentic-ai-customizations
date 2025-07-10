@@ -3,16 +3,14 @@ package io.camunda.example.aiagentruntime.memory.conversation;
 import io.camunda.connector.agenticai.aiagent.memory.conversation.ConversationSessionHandler;
 import io.camunda.connector.agenticai.aiagent.memory.conversation.ConversationStore;
 import io.camunda.connector.agenticai.aiagent.model.AgentContext;
-import io.camunda.connector.agenticai.aiagent.model.AgentResponse;
-import io.camunda.connector.agenticai.aiagent.model.request.AgentRequest;
-import io.camunda.connector.api.outbound.OutboundConnectorContext;
-import io.camunda.example.aiagentruntime.memory.conversation.entity.MyConversationRepository;
-import io.camunda.example.aiagentruntime.memory.conversation.entity.ProcessContext;
+import io.camunda.connector.agenticai.aiagent.model.AgentExecutionContext;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class MyConversationStore implements ConversationStore {
+
+  public static final String TYPE = "my-conversation";
 
   private final MyConversationRepository repository;
 
@@ -21,22 +19,17 @@ public class MyConversationStore implements ConversationStore {
   }
 
   @Override
+  public String type() {
+    return TYPE;
+  }
+
+  @Override
   @Transactional
-  public AgentResponse executeInSession(
-      OutboundConnectorContext outboundConnectorContext,
-      AgentRequest agentRequest,
+  public <T> T executeInSession(
+      AgentExecutionContext executionContext,
       AgentContext agentContext,
-      ConversationSessionHandler sessionHandler) {
-    final var jobContext = outboundConnectorContext.getJobContext();
-    final var processContext =
-        new ProcessContext(
-            String.valueOf(jobContext.getProcessDefinitionKey()),
-            String.valueOf(jobContext.getProcessInstanceKey()),
-            jobContext.getElementId(),
-            String.valueOf(jobContext.getElementInstanceKey()));
-
-    final var session = new MyConversationSession(repository, processContext);
-
+      ConversationSessionHandler<T> sessionHandler) {
+    final var session = new MyConversationSession(repository, executionContext.jobContext());
     return sessionHandler.handleSession(session);
   }
 }
