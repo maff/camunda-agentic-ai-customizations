@@ -66,10 +66,7 @@ public class MyConversationSession implements ConversationSession {
           previousConversation.getConversationId(), previousConversation);
     }
 
-    final var conversationContext =
-        new MyConversationContext(
-            conversation.getConversationId().toString(), conversation.getId());
-
-    return agentContext.withConversation(conversationContext);
+    return agentContext.withConversation(
+        new MyConversationContext(conversationId.toString(), conversation.getId()));
   }
 }

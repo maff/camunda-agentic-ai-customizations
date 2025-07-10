@@ -7,11 +7,12 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ObjectMapperTypePostProcessor implements BeanPostProcessor {
+public class ConversationContextSubTypesBeanPostProcessor implements BeanPostProcessor {
 
   @Override
   public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
     if (bean instanceof ObjectMapper objectMapper) {
+      // register custom subtype for our conversation context class
       objectMapper.registerSubtypes(MyConversationContext.class);
     }
 

@@ -10,11 +10,12 @@
     </parent>
 
     <groupId>io.camunda.example</groupId>
-    <artifactId>ai-agent-runtime</artifactId>
+    <artifactId>agentic-ai-customizations</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
-    <name>ai-agent-runtime</name>
-    <description>ai-agent-runtime</description>
+    <name>agentic-ai-customizations</name>
+    <description>Test project for Camunda AI Agent customizations</description>
+    <url>https://docs.camunda.io/docs/next/components/connectors/out-of-the-box-connectors/agentic-ai-aiagent/</url>
 
     <properties>
         <java.version>24</java.version>

@@ -7,6 +7,12 @@ import io.camunda.connector.agenticai.aiagent.model.AgentExecutionContext;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Custom conversation store implementation that uses a repository to manage conversation data.
+ *
+ * <p>Usage: select "Custom Implementation" as memory storage type and specify "my-conversation" as
+ * implementation type in the agent configuration properties.
+ */
 @Component
 public class MyConversationStore implements ConversationStore {
 

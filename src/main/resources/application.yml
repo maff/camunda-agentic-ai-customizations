@@ -1,9 +1,8 @@
 server:
-  port: 8086
-
+  port: 8181
 spring:
   application:
-    name: ai-agent-runtime
+    name: agentic-ai-customizations
   jpa:
     hibernate:
       ddl-auto: validate
