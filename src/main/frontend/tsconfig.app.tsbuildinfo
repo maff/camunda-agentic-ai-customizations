@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/main.tsx","./src/api/conversations.ts","./src/components/chatmessage.tsx","./src/components/conversationdetail.tsx","./src/components/conversationlist.tsx","./src/components/messagemetadata.tsx","./src/hooks/useconversations.ts","./src/types/conversation.ts"],"version":"5.6.3"}

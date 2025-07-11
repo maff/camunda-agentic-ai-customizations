@@ -1,0 +1,8 @@
+@import '@carbon/styles/css/styles.css';
+
+body {
+  font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
