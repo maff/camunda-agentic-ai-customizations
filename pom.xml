@@ -22,7 +22,7 @@
         <version.connectors>8.8.0-SNAPSHOT</version.connectors>
         <version.cpt>8.8.0-SNAPSHOT</version.cpt>
         <frontend-maven-plugin.version>1.15.1</frontend-maven-plugin.version>
-        <node.version>v22.17.0</node.version>
+        <node.version>v24.4.0</node.version>
         <npm.version>11.4.2</npm.version>
     </properties>
 

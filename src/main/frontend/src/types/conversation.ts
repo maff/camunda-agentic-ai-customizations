@@ -27,7 +27,7 @@ export const ContentSchema = z.discriminatedUnion('type', [
 export const ToolCallSchema = z.object({
   id: z.string(),
   name: z.string(),
-  arguments: z.record(z.any()),
+  arguments: z.record(z.string(), z.any()),
 });
 
 // Tool call result schema
@@ -35,7 +35,7 @@ export const ToolCallResultSchema = z.object({
   id: z.string().nullable(),
   name: z.string().nullable(),
   content: z.any().nullable(),
-  properties: z.record(z.any()).optional(),
+  properties: z.record(z.string(), z.any()).optional(),
 });
 
 // Token usage schema
@@ -61,7 +61,7 @@ export const MessageMetadataSchema = z.object({
 
 // Base message schema
 export const BaseMessageSchema = z.object({
-  metadata: z.record(z.any()).optional(),
+  metadata: z.record(z.string(), z.any()).optional(),
 });
 
 // Content message schema (for messages that can have content)
