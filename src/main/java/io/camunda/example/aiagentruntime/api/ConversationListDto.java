@@ -11,5 +11,6 @@ public record ConversationListDto(
     ZonedDateTime createdAt,
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
     ZonedDateTime updatedAt,
+    String bpmnProcessId,
     String firstUserMessage
 ) {}

@@ -120,6 +120,7 @@ export const ConversationListSchema = z.object({
   conversationId: z.string().uuid(),
   createdAt: z.string(),
   updatedAt: z.string(),
+  bpmnProcessId: z.string(),
   firstUserMessage: z.string(),
 });
 

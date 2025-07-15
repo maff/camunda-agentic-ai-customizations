@@ -182,6 +182,9 @@ export function ConversationDetail() {
               color: '#525252',
               maxWidth: '600px'
             }}>
+              <span style={{ fontWeight: '500', color: '#393939' }}>Process:</span>
+              <span style={{ fontFamily: 'monospace' }}>{conversation.jobContext.bpmnProcessId}</span>
+              
               <span style={{ fontWeight: '500', color: '#393939' }}>ID:</span>
               <span style={{ fontFamily: 'monospace' }}>{conversation.conversationId}</span>
               
@@ -190,9 +193,6 @@ export function ConversationDetail() {
               
               <span style={{ fontWeight: '500', color: '#393939' }}>Updated:</span>
               <span>{new Date(conversation.updatedAt).toLocaleString()}</span>
-              
-              <span style={{ fontWeight: '500', color: '#393939' }}>Process:</span>
-              <span style={{ fontFamily: 'monospace' }}>{conversation.jobContext.bpmnProcessId}</span>
             </div>
           </div>
         </div>

@@ -17,6 +17,7 @@ public class ConversationMapper {
         conversation.getConversationId(),
         conversation.getCreatedAt(),
         conversation.getUpdatedAt(),
+        conversation.getJobContext().bpmnProcessId(),
         extractFirstUserMessage(conversation)
     );
   }

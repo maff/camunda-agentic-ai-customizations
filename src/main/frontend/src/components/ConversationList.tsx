@@ -79,17 +79,20 @@ export function ConversationList() {
               }}
               >
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: '0.75rem', color: '#6f6f6f', marginBottom: '0.25rem' }}>
-                    ID: {conversation.conversationId}
-                  </div>
                   <div style={{ fontSize: '1.125rem', fontWeight: '500', marginBottom: '0.5rem', color: '#161616' }}>
                     {conversation.firstUserMessage}
                   </div>
-                  <div style={{ fontSize: '0.875rem', color: '#525252' }}>
+                  <div style={{ fontSize: '0.75rem', color: '#6f6f6f', marginBottom: '0.25rem' }}>
+                    Process: {conversation.bpmnProcessId}
+                  </div>
+                  <div style={{ fontSize: '0.75rem', color: '#6f6f6f', marginBottom: '0.25rem' }}>
+                    ID: {conversation.conversationId}
+                  </div>
+                  <div style={{ fontSize: '0.75rem', color: '#6f6f6f', marginBottom: '0.25rem' }}>
                     Created: {new Date(conversation.createdAt).toLocaleString()}
                   </div>
                   {conversation.updatedAt !== conversation.createdAt && (
-                    <div style={{ fontSize: '0.875rem', color: '#525252' }}>
+                    <div style={{ fontSize: '0.75rem', color: '#6f6f6f', marginBottom: '0.25rem' }}>
                       Updated: {new Date(conversation.updatedAt).toLocaleString()}
                     </div>
                   )}
