@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useConversations } from '@/hooks/useConversations';
-import { Loading, InlineNotification, ClickableTile, Grid, Column } from '@carbon/react';
+import { Loading, InlineNotification, Grid, Column } from '@carbon/react';
 import { ChevronRight } from '@carbon/icons-react';
 
 export function ConversationList() {
@@ -50,19 +50,39 @@ export function ConversationList() {
         <h1 style={{ marginBottom: '2rem', fontSize: '2rem', fontWeight: 'bold' }}>Conversations</h1>
         
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          {conversations.map((conversation) => (
+          {conversations.map((conversation, index) => (
             <Link
               key={conversation.id}
               to={`/conversation/${conversation.conversationId}`}
               style={{ textDecoration: 'none' }}
             >
-              <ClickableTile>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <div style={{ 
+                padding: '1.5rem',
+                backgroundColor: 'white',
+                border: '1px solid #d0d0d0',
+                borderRadius: '8px',
+                boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                transition: 'all 0.2s ease',
+                cursor: 'pointer',
+                display: 'flex', 
+                justifyContent: 'space-between', 
+                alignItems: 'flex-start'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
+                e.currentTarget.style.cursor = 'pointer';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+              }}
+              >
                 <div style={{ flex: 1 }}>
                   <div style={{ fontSize: '0.75rem', color: '#6f6f6f', marginBottom: '0.25rem' }}>
                     ID: {conversation.conversationId}
                   </div>
-                  <div style={{ fontSize: '1.125rem', fontWeight: '500', marginBottom: '0.5rem' }}>
+                  <div style={{ fontSize: '1.125rem', fontWeight: '500', marginBottom: '0.5rem', color: '#161616' }}>
                     {conversation.firstUserMessage}
                   </div>
                   <div style={{ fontSize: '0.875rem', color: '#525252' }}>
@@ -74,9 +94,8 @@ export function ConversationList() {
                     </div>
                   )}
                 </div>
-                <ChevronRight size={20} />
+                <ChevronRight size={20} style={{ color: '#525252' }} />
               </div>
-              </ClickableTile>
             </Link>
           ))}
         </div>

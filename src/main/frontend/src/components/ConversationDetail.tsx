@@ -2,8 +2,8 @@ import { Link, useParams } from 'react-router-dom';
 import { useConversation } from '@/hooks/useConversations';
 import { ChatMessage } from './ChatMessage';
 import { Loading, InlineNotification, Grid, Column } from '@carbon/react';
-import { ArrowLeft } from '@carbon/icons-react';
-import { useEffect, useRef } from 'react';
+import { ArrowLeft, ArrowUp } from '@carbon/icons-react';
+import { useEffect, useRef, useState } from 'react';
 import { Conversation } from '@/types/conversation';
 
 const THINKING_WORDS = [
@@ -82,6 +82,7 @@ export function ConversationDetail() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const thinkingWordRef = useRef<string>(getRandomThinkingWord());
   const toolCallWordRef = useRef<string>(getRandomToolCallWord());
+  const [showScrollToTop, setShowScrollToTop] = useState(false);
 
   useEffect(() => {
     if (conversation && messagesEndRef.current) {
@@ -99,6 +100,20 @@ export function ConversationDetail() {
       }
     }
   }, [conversation?.messages?.length]);
+
+  // Show/hide scroll to top button based on scroll position
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollToTop(window.scrollY > 400);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   if (isLoading) {
     return (
@@ -145,6 +160,7 @@ export function ConversationDetail() {
   }
 
   return (
+    <>
     <Grid>
       <Column sm={4} md={8} lg={16}>
         {/* Header */}
@@ -233,5 +249,41 @@ export function ConversationDetail() {
         </div>
       </Column>
     </Grid>
+    
+    {/* Scroll to top button */}
+    {showScrollToTop && (
+      <button
+        onClick={scrollToTop}
+        style={{
+          position: 'fixed',
+          bottom: '2rem',
+          right: '2rem',
+          width: '48px',
+          height: '48px',
+          backgroundColor: '#0f62fe',
+          color: 'white',
+          border: 'none',
+          borderRadius: '50%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor: 'pointer',
+          boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
+          transition: 'all 0.2s ease',
+          zIndex: 1000
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.backgroundColor = '#0353e9';
+          e.currentTarget.style.transform = 'scale(1.1)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.backgroundColor = '#0f62fe';
+          e.currentTarget.style.transform = 'scale(1)';
+        }}
+      >
+        <ArrowUp size={20} />
+      </button>
+    )}
+    </>
   );
 }
