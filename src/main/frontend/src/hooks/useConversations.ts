@@ -6,6 +6,7 @@ export function useConversations() {
     queryKey: ['conversations'],
     queryFn: fetchConversations,
     staleTime: 30000, // 30 seconds
+    refetchInterval: 2000, // Poll every 2 seconds
   });
 }
 
@@ -15,5 +16,6 @@ export function useConversation(conversationId: string) {
     queryFn: () => fetchConversation(conversationId),
     enabled: !!conversationId,
     staleTime: 60000, // 1 minute
+    refetchInterval: 500, // Poll every 500ms
   });
 }

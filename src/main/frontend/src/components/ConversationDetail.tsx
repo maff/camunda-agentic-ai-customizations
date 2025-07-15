@@ -3,10 +3,102 @@ import { useConversation } from '@/hooks/useConversations';
 import { ChatMessage } from './ChatMessage';
 import { Loading, InlineNotification, Grid, Column } from '@carbon/react';
 import { ArrowLeft } from '@carbon/icons-react';
+import { useEffect, useRef } from 'react';
+import { Conversation } from '@/types/conversation';
+
+const THINKING_WORDS = [
+  'flabbergasting',
+  'crunching',
+  'pondering',
+  'cogitating',
+  'ruminating',
+  'percolating',
+  'mulling',
+  'contemplating',
+  'deliberating',
+  'marinating'
+];
+
+const TOOL_CALL_WORDS = [
+  'tooling around',
+  'widget wrangling',
+  'gadget grinding',
+  'mechanism meddling',
+  'apparatus assembling',
+  'contraption conjuring',
+  'device dancing',
+  'gizmo gathering',
+  'instrument investigating',
+  'utensil utilizing'
+];
+
+function getRandomThinkingWord(): string {
+  return THINKING_WORDS[Math.floor(Math.random() * THINKING_WORDS.length)];
+}
+
+function getRandomToolCallWord(): string {
+  return TOOL_CALL_WORDS[Math.floor(Math.random() * TOOL_CALL_WORDS.length)];
+}
+
+function isConversationProgressing(conversation: Conversation): boolean {
+  if (!conversation.messages || conversation.messages.length === 0) {
+    return false;
+  }
+  
+  const lastMessage = conversation.messages[conversation.messages.length - 1];
+  
+  // Check if last message was a user message
+  if (lastMessage.role === 'user') {
+    return true;
+  }
+  
+  // Check if last message was an assistant message with tool calls
+  if (lastMessage.role === 'assistant' && lastMessage.toolCalls && lastMessage.toolCalls.length > 0) {
+    return true;
+  }
+  
+  // Check if last message was a tool call result message
+  if (lastMessage.role === 'tool_call_result') {
+    return true;
+  }
+  
+  return false;
+}
+
+function isWaitingForToolResults(conversation: Conversation): boolean {
+  if (!conversation.messages || conversation.messages.length === 0) {
+    return false;
+  }
+  
+  const lastMessage = conversation.messages[conversation.messages.length - 1];
+  
+  // Check if last message was an assistant message with tool calls
+  return lastMessage.role === 'assistant' && lastMessage.toolCalls && lastMessage.toolCalls.length > 0;
+}
 
 export function ConversationDetail() {
   const { conversationId } = useParams<{ conversationId: string }>();
   const { data: conversation, isLoading, error } = useConversation(conversationId!);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const thinkingWordRef = useRef<string>(getRandomThinkingWord());
+  const toolCallWordRef = useRef<string>(getRandomToolCallWord());
+
+  useEffect(() => {
+    if (conversation && messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [conversation?.messages?.length]);
+
+  // Update thinking word when conversation progressing status changes
+  useEffect(() => {
+    if (conversation && isConversationProgressing(conversation)) {
+      if (isWaitingForToolResults(conversation)) {
+        toolCallWordRef.current = getRandomToolCallWord();
+      } else {
+        thinkingWordRef.current = getRandomThinkingWord();
+      }
+    }
+  }, [conversation?.messages?.length]);
 
   if (isLoading) {
     return (
@@ -104,6 +196,38 @@ export function ConversationDetail() {
               {conversation.messages.map((message, index) => (
                 <ChatMessage key={index} message={message} />
               ))}
+              
+              {isConversationProgressing(conversation) && (
+                <div style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center',
+                  gap: '0.5rem',
+                  padding: '1rem',
+                  backgroundColor: '#f4f4f4',
+                  borderRadius: '0.5rem',
+                  color: '#525252',
+                  fontStyle: 'italic'
+                }}>
+                  <div style={{
+                    width: '16px',
+                    height: '16px',
+                    border: '2px solid #e0e0e0',
+                    borderTop: '2px solid #0f62fe',
+                    borderRadius: '50%',
+                    animation: 'spin 1s linear infinite'
+                  }} />
+                  <span>{isWaitingForToolResults(conversation) ? toolCallWordRef.current : thinkingWordRef.current}...</span>
+                  <style>{`
+                    @keyframes spin {
+                      0% { transform: rotate(0deg); }
+                      100% { transform: rotate(360deg); }
+                    }
+                  `}</style>
+                </div>
+              )}
+              
+              <div ref={messagesEndRef} />
             </div>
           )}
         </div>
