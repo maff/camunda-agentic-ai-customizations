@@ -1,4 +1,4 @@
-package io.camunda.example.aiagentruntime;
+package io.camunda.example.aiagentruntime.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.camunda.example.aiagentruntime.memory.conversation.MyConversationContext;

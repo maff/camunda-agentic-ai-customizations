@@ -14,7 +14,6 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.type.SqlTypes;
@@ -27,7 +26,7 @@ public class MyConversation {
   @Column(nullable = false)
   private UUID id;
 
-  @CreationTimestamp private ZonedDateTime createdAt;
+  private ZonedDateTime createdAt;
   @UpdateTimestamp private ZonedDateTime updatedAt;
 
   @Column(nullable = false)
@@ -49,6 +48,14 @@ public class MyConversation {
   public MyConversation(UUID conversationId, MyConversationJobContext jobContext) {
     this.conversationId = conversationId;
     this.jobContext = jobContext;
+    this.createdAt = ZonedDateTime.now();
+  }
+
+  public MyConversation(
+      UUID conversationId, MyConversationJobContext jobContext, MyConversation previous) {
+    this.conversationId = conversationId;
+    this.jobContext = jobContext;
+    this.createdAt = previous.createdAt;
   }
 
   public UUID getId() {

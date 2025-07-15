@@ -46,27 +46,33 @@ public class MyConversationSession implements ConversationSession {
       AgentContext agentContext, RuntimeMemory runtimeMemory) {
 
     UUID conversationId;
+
+    MyConversation conversation;
+    MyConversationJobContext conversationJobContext = MyConversationJobContext.from(jobContext);
+
     if (previousConversation != null) {
       conversationId = previousConversation.getConversationId();
       previousConversation.setArchived(true);
       repository.save(previousConversation);
+
+      conversation =
+          new MyConversation(conversationId, conversationJobContext, previousConversation);
     } else {
-      conversationId = UUID.randomUUID();
+      conversation = new MyConversation(UUID.randomUUID(), conversationJobContext);
     }
 
-    final var conversation =
-        new MyConversation(conversationId, MyConversationJobContext.from(jobContext));
     conversation.setMessages(runtimeMemory.allMessages());
-
     repository.save(conversation);
-    repository.flush();
 
     if (previousConversation != null) {
       repository.deleteAllPreviousEntries(
           previousConversation.getConversationId(), previousConversation);
     }
 
+    repository.flush();
+
     return agentContext.withConversation(
-        new MyConversationContext(conversationId.toString(), conversation.getId()));
+        new MyConversationContext(
+            conversation.getConversationId().toString(), conversation.getId()));
   }
 }
