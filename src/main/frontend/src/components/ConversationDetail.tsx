@@ -73,7 +73,7 @@ function isWaitingForToolResults(conversation: Conversation): boolean {
   const lastMessage = conversation.messages[conversation.messages.length - 1];
   
   // Check if last message was an assistant message with tool calls
-  return lastMessage.role === 'assistant' && lastMessage.toolCalls && lastMessage.toolCalls.length > 0;
+  return lastMessage.role === 'assistant' && !!lastMessage.toolCalls && lastMessage.toolCalls.length > 0;
 }
 
 export function ConversationDetail() {

@@ -50,7 +50,7 @@ export function ConversationList() {
         <h1 style={{ marginBottom: '2rem', fontSize: '2rem', fontWeight: 'bold' }}>Conversations</h1>
         
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          {conversations.map((conversation, index) => (
+          {conversations.map((conversation) => (
             <Link
               key={conversation.id}
               to={`/conversation/${conversation.conversationId}`}
