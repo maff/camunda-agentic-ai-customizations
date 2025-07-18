@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,7 +27,8 @@ public class ConversationController {
 
   @GetMapping("/{conversationId}")
   public ResponseEntity<ConversationDto> getConversation(@PathVariable UUID conversationId) {
-    return conversationService.getConversationById(conversationId)
+    return conversationService
+        .getConversationById(conversationId)
         .map(ResponseEntity::ok)
         .orElse(ResponseEntity.notFound().build());
   }

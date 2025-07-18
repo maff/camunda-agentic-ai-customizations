@@ -18,8 +18,7 @@ public class ConversationMapper {
         conversation.getCreatedAt(),
         conversation.getUpdatedAt(),
         conversation.getJobContext().bpmnProcessId(),
-        extractFirstUserMessage(conversation)
-    );
+        extractFirstUserMessage(conversation));
   }
 
   public ConversationDto toDto(MyConversation conversation) {
@@ -30,8 +29,7 @@ public class ConversationMapper {
         conversation.getUpdatedAt(),
         toJobContextDto(conversation.getJobContext()),
         conversation.getMessages(),
-        extractFirstUserMessage(conversation)
-    );
+        extractFirstUserMessage(conversation));
   }
 
   private ConversationDto.JobContextDto toJobContextDto(MyConversationJobContext jobContext) {
@@ -42,8 +40,7 @@ public class ConversationMapper {
         jobContext.elementId(),
         jobContext.elementInstanceKey(),
         jobContext.tenantId(),
-        jobContext.type()
-    );
+        jobContext.type());
   }
 
   private String extractFirstUserMessage(MyConversation conversation) {
@@ -58,22 +55,21 @@ public class ConversationMapper {
     if (!(message instanceof ContentMessage contentMessage)) {
       return "Non-content message";
     }
-    
+
     if (contentMessage.content() == null || contentMessage.content().isEmpty()) {
       return "Empty message";
     }
-    
-    // Get first text content from the message
+
+    // get first text content from the message
     return contentMessage.content().stream()
         .filter(content -> content instanceof TextContent)
         .map(content -> ((TextContent) content).text())
         .findFirst()
-        .map(text -> {
-          // Truncate if too long
-          return text != null && text.length() > 100 
-              ? text.substring(0, 97) + "..." 
-              : text;
-        })
+        .map(
+            text -> {
+              // truncate if too long
+              return text.length() > 100 ? text.substring(0, 97) + "..." : text;
+            })
         .orElse("Non-text message");
   }
 }
