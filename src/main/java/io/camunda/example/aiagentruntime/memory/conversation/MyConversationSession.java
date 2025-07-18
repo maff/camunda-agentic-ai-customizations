@@ -44,19 +44,18 @@ public class MyConversationSession implements ConversationSession {
   @Override
   public AgentContext storeFromRuntimeMemory(
       AgentContext agentContext, RuntimeMemory runtimeMemory) {
-
-    UUID conversationId;
-
-    MyConversation conversation;
     MyConversationJobContext conversationJobContext = MyConversationJobContext.from(jobContext);
 
+    MyConversation conversation;
     if (previousConversation != null) {
-      conversationId = previousConversation.getConversationId();
       previousConversation.setArchived(true);
       repository.save(previousConversation);
 
       conversation =
-          new MyConversation(conversationId, conversationJobContext, previousConversation);
+          new MyConversation(
+              previousConversation.getConversationId(),
+              conversationJobContext,
+              previousConversation);
     } else {
       conversation = new MyConversation(UUID.randomUUID(), conversationJobContext);
     }
