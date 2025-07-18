@@ -10,25 +10,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-/** Example of a custom agent initializer. */
 @Component
-public class MyCustomAiAgentInitializer implements AgentInitializer {
+public class MyCustomAgentInitializer implements AgentInitializer {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(MyCustomAiAgentInitializer.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(MyCustomAgentInitializer.class);
 
   private final AgentInitializer delegate;
 
-  public MyCustomAiAgentInitializer(
+  public MyCustomAgentInitializer(
       AdHocToolsSchemaResolver schemaResolver, GatewayToolHandlerRegistry gatewayToolHandlers) {
     this.delegate = new AgentInitializerImpl(schemaResolver, gatewayToolHandlers);
   }
 
   @Override
   public AgentInitializationResult initializeAgent(AgentExecutionContext executionContext) {
-    LOGGER.info(
-        ">>> Initializing agent. Context: {}, Request: {}",
-        executionContext.jobContext(),
-        executionContext.request());
+    LOGGER.info(">>> Initializing agent");
 
     final var result = delegate.initializeAgent(executionContext);
 
