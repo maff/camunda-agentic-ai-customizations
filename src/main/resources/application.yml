@@ -6,3 +6,14 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+
+camunda:
+  connector:
+    agenticai:
+      aiagent:
+        enabled: true
+      ad-hoc-tools-schema-resolver:
+        enabled: false
+      mcp:
+        remote-client:
+          enabled: false

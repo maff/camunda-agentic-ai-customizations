@@ -6,15 +6,6 @@ camunda:
     auth:
       username: demo
       password: demo
-  connector:
-    agenticai:
-      aiagent:
-        enabled: true
-      ad-hoc-tools-schema-resolver:
-        enabled: false
-      mcp:
-        remote-client:
-          enabled: false
 
 logging:
   level:
