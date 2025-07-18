@@ -13,7 +13,10 @@ public class HibernateConfig {
   @Bean
   public HibernatePropertiesCustomizer jsonFormatMapperCustomizer() {
     return (properties) -> {
-      // create objectMapper without scala module
+      // the connectors SDK includes the Jackson Scala module which uses scala
+      // types when deserializing maps - register a custom ObjectMapper explicitely
+      // ignoring the Scala module to avoid issues with deserializing the serialized
+      // message content
       ObjectMapper objectMapper = new ObjectMapper();
       ObjectMapper.findModules().stream()
           .filter(module -> !module.getModuleName().equals("DefaultScalaModule"))
