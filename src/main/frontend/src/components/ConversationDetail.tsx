@@ -88,7 +88,7 @@ export function ConversationDetail() {
     if (conversation && messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [conversation?.messages?.length]);
+  }, [conversation]);
 
   // Update thinking word when conversation progressing status changes
   useEffect(() => {
@@ -99,7 +99,7 @@ export function ConversationDetail() {
         thinkingWordRef.current = getRandomThinkingWord();
       }
     }
-  }, [conversation?.messages?.length]);
+  }, [conversation]);
 
   // Show/hide scroll to top button based on scroll position
   useEffect(() => {

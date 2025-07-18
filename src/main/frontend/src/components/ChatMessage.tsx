@@ -1,4 +1,4 @@
-import type { Message } from '@/types/conversation';
+import type { Message, Content } from '@/types/conversation';
 import { MessageMetadataComponent } from './MessageMetadata';
 import { Tile, CodeSnippet } from '@carbon/react';
 
@@ -13,7 +13,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
       return <span style={{ color: '#6f6f6f', fontStyle: 'italic' }}>Tool call result</span>;
     }
 
-    const contentMessage = message as Extract<Message, { content: any }>;
+    const contentMessage = message as Extract<Message, { content: Content[] }>;
     if (!contentMessage.content || contentMessage.content.length === 0) {
       return <span style={{ color: '#6f6f6f', fontStyle: 'italic' }}>No content</span>;
     }
