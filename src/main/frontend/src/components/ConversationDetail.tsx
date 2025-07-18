@@ -4,7 +4,7 @@ import { ChatMessage } from './ChatMessage';
 import { Loading, InlineNotification, Grid, Column } from '@carbon/react';
 import { ArrowLeft, ArrowUp } from '@carbon/icons-react';
 import { useEffect, useRef, useState } from 'react';
-import { Conversation } from '@/types/conversation';
+import type { Conversation } from '@/types/conversation';
 
 const THINKING_WORDS = [
   'flabbergasting',

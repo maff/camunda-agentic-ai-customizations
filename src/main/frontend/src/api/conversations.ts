@@ -1,5 +1,6 @@
 import { z } from 'zod';
-import { ConversationListSchema, ConversationSchema, type ConversationList, type Conversation } from '@/types/conversation';
+import { ConversationListSchema, ConversationSchema } from '@/types/conversation';
+import type { ConversationList, Conversation } from '@/types/conversation';
 
 const API_BASE = '/api';
 
