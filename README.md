@@ -1,3 +1,7 @@
+[![](https://img.shields.io/badge/Community%20Extension-An%20open%20source%20community%20maintained%20project-FF4700)](https://github.com/camunda-community-hub/community)
+![Compatible with: Camunda 8](https://img.shields.io/badge/Compatible%20with-Camunda%208.8-0072Ce)
+[![](https://img.shields.io/badge/Lifecycle-Proof%20of%20Concept-blueviolet)](https://github.com/Camunda-Community-Hub/community/blob/main/extension-lifecycle.md#proof-of-concept-)
+
 # Camunda AI Agent customizations
 
 > [!WARNING]
@@ -12,6 +16,7 @@ connector.
 - An example of how to override specific parts of the AI Agent connector implementation. See [MyCustomAgentInitializer.java](src/main/java/io/camunda/example/aiagentruntime/MyCustomAgentInitializer.java)
 - A custom storage implementation for the AI Agent connector that stores conversations in a Postgres database. See [MyConversation.java](src/main/java/io/camunda/example/aiagentruntime/memory/conversation/MyConversation.java)
   - This comes paired with a minimal UI to browse and follow conversations stored in the custom storage implementation.
+- An example MCP client configuration in the `dev-mcp-client` Spring Boot profile
 
 ## Prerequisites
 
