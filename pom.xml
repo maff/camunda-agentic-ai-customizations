@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.3</version>
+        <version>3.5.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -19,12 +19,12 @@
 
     <properties>
         <java.version>24</java.version>
-        <version.connectors>8.8.0-SNAPSHOT</version.connectors>
-        <version.cpt>8.8.0-SNAPSHOT</version.cpt>
-        <spotless-maven-plugin.version>2.45.0</spotless-maven-plugin.version>
+        <version.connectors>8.8.0-alpha7</version.connectors>
+        <version.cpt>8.8.0-alpha7</version.cpt>
+        <spotless-maven-plugin.version>2.46.1</spotless-maven-plugin.version>
         <frontend-maven-plugin.version>1.15.1</frontend-maven-plugin.version>
-        <node.version>v24.4.0</node.version>
-        <npm.version>11.4.2</npm.version>
+        <node.version>v24.6.0</node.version>
+        <npm.version>11.5.2</npm.version>
     </properties>
 
     <dependencies>
