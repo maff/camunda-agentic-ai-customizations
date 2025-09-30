@@ -16,6 +16,8 @@ Test project to demonstrate how to customize the [Camunda AI Agent](https://docs
     - This comes paired with a minimal UI to browse and follow conversations stored in the custom storage implementation.
 - An example MCP client configuration in the `dev-mcp-client` Spring Boot profile
 
+![Custom AI Agent conversation UI](doc/ai-agent-conversation-ui.png)
+
 ## Prerequisites
 
 > [!IMPORTANT]
