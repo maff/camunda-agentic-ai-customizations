@@ -82,7 +82,7 @@ apply the following changes. You can start from one of
 the [chat agent examples](https://github.com/camunda/connectors/tree/main/connectors/agentic-ai/examples/ai-agent/service-task/ai-agent-chat-with-tools)
 provided with the AI Agent connector implementation.
 
-- Apply the `Hybrid AI Agent Process` element template to your AI Agent task to override the task definition type.
+- Apply the `Hybrid AI Agent Task` element template to your AI Agent task to override the task definition type.
 - Set Task definition type to `io.camunda.agenticai:aiagent:hybrid1` (or the value of the `CONNECTOR_AI_AGENT_TYPE` environment variable in case you used another value).
 
 ### Configuring the AI Agent to use the custom storage
