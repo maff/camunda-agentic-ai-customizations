@@ -1,5 +1,5 @@
 [![](https://img.shields.io/badge/Community%20Extension-An%20open%20source%20community%20maintained%20project-FF4700)](https://github.com/camunda-community-hub/community)
-![Compatible with: Camunda 8](https://img.shields.io/badge/Compatible%20with-Camunda%208.8-0072Ce)
+![Compatible with: Camunda 8.8.0](https://img.shields.io/badge/Compatible%20with-Camunda%208.8-0072Ce)
 [![](https://img.shields.io/badge/Lifecycle-Proof%20of%20Concept-blueviolet)](https://github.com/Camunda-Community-Hub/community/blob/main/extension-lifecycle.md#proof-of-concept-)
 
 # Camunda AI Agent customizations
@@ -7,7 +7,7 @@
 > [!WARNING]
 > This is a playground project to demonstrate how to customize the Camunda AI Agent connector. It is by no means a production-ready solution.
 
-Test project to demonstrate how to customize the [Camunda AI Agent](https://docs.camunda.io/docs/next/components/connectors/out-of-the-box-connectors/agentic-ai-aiagent/) connector.
+Test project to demonstrate how to customize the Camunda [AI Agent connector](https://docs.camunda.io/docs/components/connectors/out-of-the-box-connectors/agentic-ai-aiagent/).
 
 ## What's included?
 
@@ -20,16 +20,12 @@ Test project to demonstrate how to customize the [Camunda AI Agent](https://docs
 
 ## Prerequisites
 
-> [!IMPORTANT]
-> Custom storage support for the AI Agent connector is available starting from Camunda 8.8.0-alpha7. For this example you need
-> to use a current SNAPSHOT build or a released version of 8.8.0-alpha7 or higher.
-
 - A Camunda 8.8.0 cluster (for example,
   using [Camunda 8 Run](https://docs.camunda.io/docs/next/self-managed/quickstart/developer-quickstart/c8run/))
 - Java 24 or higher
 - A running Docker environment
 - The hybrid AI Agent connector element template:
-    - [AI Agent Process connector](https://raw.githubusercontent.com/camunda/connectors/refs/heads/main/connectors/agentic-ai/element-templates/hybrid/agenticai-aiagent-job-worker-hybrid.json)
+    - [AI Agent Subprocess connector](https://raw.githubusercontent.com/camunda/connectors/refs/heads/main/connectors/agentic-ai/element-templates/hybrid/agenticai-aiagent-job-worker-hybrid.json)
     - [AI Agent Task connector](https://raw.githubusercontent.com/camunda/connectors/refs/heads/main/connectors/agentic-ai/element-templates/hybrid/agenticai-aiagent-outbound-connector-hybrid.json)
 
 ## Running the example
@@ -63,21 +59,21 @@ After starting the application, you can access the conversation UI at [http://lo
 
 Configuration depends on whether you want to use the **AI Agent Process** (applied to an ad-hoc sub-process) or the **AI Agent Task** (applied to a service task) implementation.
 
-#### AI Agent Process
+#### AI Agent Subprocess
 
 In a process using
-the [AI Agent Process connector](https://docs.camunda.io/docs/8.8/components/connectors/out-of-the-box-connectors/agentic-ai-aiagent-process/),
+the [AI Agent Subprocess connector](https://docs.camunda.io/docs/components/connectors/out-of-the-box-connectors/agentic-ai-aiagent-subprocess/),
 apply the following changes. You can start from one of
 the [chat agent examples](https://github.com/camunda/connectors/tree/main/connectors/agentic-ai/examples/ai-agent/ad-hoc-sub-process/ai-agent-chat-with-tools)
 provided with the AI Agent connector implementation.
 
-- Apply the `Hybrid AI Agent Process` element template to your AI Agent ad-hoc sub-process to override the task definition type.
+- Apply the `Hybrid AI Agent Subprocess` element template to your AI Agent ad-hoc sub-process to override the task definition type.
 - Set Task definition type to `io.camunda.agenticai:aiagent-job-worker:hybrid1` (or the value of the `CONNECTOR_AI_AGENT_JOB_WORKER_TYPE` environment variable in case you used another value).
 
 #### AI Agent Task
 
 In a process using
-the [AI Agent Task connector](https://docs.camunda.io/docs/8.8/components/connectors/out-of-the-box-connectors/agentic-ai-aiagent-task/),
+the [AI Agent Task connector](https://docs.camunda.io/docs/components/connectors/out-of-the-box-connectors/agentic-ai-aiagent-task/),
 apply the following changes. You can start from one of
 the [chat agent examples](https://github.com/camunda/connectors/tree/main/connectors/agentic-ai/examples/ai-agent/service-task/ai-agent-chat-with-tools)
 provided with the AI Agent connector implementation.
