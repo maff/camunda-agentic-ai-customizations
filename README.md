@@ -25,7 +25,7 @@ Test project to demonstrate how to customize the Camunda [AI Agent connector](ht
 - Java 24 or higher
 - A running Docker environment
 - The hybrid AI Agent connector element template:
-    - [AI Agent Subprocess connector](https://raw.githubusercontent.com/camunda/connectors/refs/heads/main/connectors/agentic-ai/element-templates/hybrid/agenticai-aiagent-job-worker-hybrid.json)
+    - [AI Agent Sub-process connector](https://raw.githubusercontent.com/camunda/connectors/refs/heads/main/connectors/agentic-ai/element-templates/hybrid/agenticai-aiagent-job-worker-hybrid.json)
     - [AI Agent Task connector](https://raw.githubusercontent.com/camunda/connectors/refs/heads/main/connectors/agentic-ai/element-templates/hybrid/agenticai-aiagent-outbound-connector-hybrid.json)
 
 ## Running the example
@@ -59,15 +59,15 @@ After starting the application, you can access the conversation UI at [http://lo
 
 Configuration depends on whether you want to use the **AI Agent Process** (applied to an ad-hoc sub-process) or the **AI Agent Task** (applied to a service task) implementation.
 
-#### AI Agent Subprocess
+#### AI Agent Sub-process
 
 In a process using
-the [AI Agent Subprocess connector](https://docs.camunda.io/docs/components/connectors/out-of-the-box-connectors/agentic-ai-aiagent-subprocess/),
+the [AI Agent Sub-process connector](https://docs.camunda.io/docs/components/connectors/out-of-the-box-connectors/agentic-ai-aiagent-subprocess/),
 apply the following changes. You can start from one of
 the [chat agent examples](https://github.com/camunda/connectors/tree/main/connectors/agentic-ai/examples/ai-agent/ad-hoc-sub-process/ai-agent-chat-with-tools)
 provided with the AI Agent connector implementation.
 
-- Apply the `Hybrid AI Agent Subprocess` element template to your AI Agent ad-hoc sub-process to override the task definition type.
+- Apply the `Hybrid AI Agent Sub-process` element template to your AI Agent ad-hoc sub-process to override the task definition type.
 - Set Task definition type to `io.camunda.agenticai:aiagent-job-worker:hybrid1` (or the value of the `CONNECTOR_AI_AGENT_JOB_WORKER_TYPE` environment variable in case you used another value).
 
 #### AI Agent Task
