@@ -10,10 +10,16 @@ spring:
 camunda:
   connector:
     agenticai:
-      aiagent:
-        enabled: true
       ad-hoc-tools-schema-resolver:
         enabled: false
       mcp:
         remote-client:
           enabled: false
+      a2a:
+        client:
+          outbound:
+            enabled: false
+          polling:
+            enabled: false
+          webhook:
+            enabled: false
