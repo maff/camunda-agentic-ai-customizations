@@ -1,5 +1,5 @@
 [![](https://img.shields.io/badge/Community%20Extension-An%20open%20source%20community%20maintained%20project-FF4700)](https://github.com/camunda-community-hub/community)
-![Compatible with: Camunda 8.8.0](https://img.shields.io/badge/Compatible%20with-Camunda%208.10-0072Ce)
+![Compatible with: Camunda 8.10](https://img.shields.io/badge/Compatible%20with-Camunda%208.10-0072Ce)
 [![](https://img.shields.io/badge/Lifecycle-Proof%20of%20Concept-blueviolet)](https://github.com/Camunda-Community-Hub/community/blob/main/extension-lifecycle.md#proof-of-concept-)
 
 # Camunda AI Agent customizations
@@ -25,7 +25,7 @@ Test project to demonstrate how to customize the Camunda [AI Agent connector](ht
 
 - A Camunda 8.10.0 cluster (for example,
   using [Camunda 8 Run](https://docs.camunda.io/docs/next/self-managed/quickstart/developer-quickstart/c8run/))
-- Java 24 or higher
+- Java 25
 - A running Docker environment
 - The hybrid AI Agent connector element template:
     - [AI Agent Sub-process connector](https://raw.githubusercontent.com/camunda/connectors/refs/heads/main/connectors/agentic-ai/element-templates/hybrid/agenticai-aiagent-job-worker-hybrid.json)
