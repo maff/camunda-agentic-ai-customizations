@@ -1,9 +1,9 @@
 package io.camunda.example.aiagentruntime;
 
-import io.camunda.connector.agenticai.adhoctoolsschema.schema.AdHocToolsSchemaResolver;
 import io.camunda.connector.agenticai.aiagent.agent.AgentInitializationResult;
 import io.camunda.connector.agenticai.aiagent.agent.AgentInitializer;
 import io.camunda.connector.agenticai.aiagent.agent.AgentInitializerImpl;
+import io.camunda.connector.agenticai.aiagent.agent.AgentToolsResolver;
 import io.camunda.connector.agenticai.aiagent.model.AgentExecutionContext;
 import io.camunda.connector.agenticai.aiagent.tool.GatewayToolHandlerRegistry;
 import org.slf4j.Logger;
@@ -18,9 +18,8 @@ public class MyCustomAgentInitializer implements AgentInitializer {
   private final AgentInitializer delegate;
 
   public MyCustomAgentInitializer(
-      AdHocToolsSchemaResolver toolsSchemaResolver,
-      GatewayToolHandlerRegistry gatewayToolHandlers) {
-    this.delegate = new AgentInitializerImpl(toolsSchemaResolver, gatewayToolHandlers);
+      AgentToolsResolver agentToolsResolver, GatewayToolHandlerRegistry gatewayToolHandlers) {
+    this.delegate = new AgentInitializerImpl(agentToolsResolver, gatewayToolHandlers);
   }
 
   @Override

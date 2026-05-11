@@ -22,7 +22,7 @@ public class ConversationController {
 
   @GetMapping
   public List<ConversationListDto> getAllConversations() {
-    return conversationService.getAllNonArchivedConversations();
+    return conversationService.listConversations();
   }
 
   @GetMapping("/{conversationId}")

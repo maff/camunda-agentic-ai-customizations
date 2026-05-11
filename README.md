@@ -1,5 +1,5 @@
 [![](https://img.shields.io/badge/Community%20Extension-An%20open%20source%20community%20maintained%20project-FF4700)](https://github.com/camunda-community-hub/community)
-![Compatible with: Camunda 8.8.0](https://img.shields.io/badge/Compatible%20with-Camunda%208.8-0072Ce)
+![Compatible with: Camunda 8.10](https://img.shields.io/badge/Compatible%20with-Camunda%208.10-0072Ce)
 [![](https://img.shields.io/badge/Lifecycle-Proof%20of%20Concept-blueviolet)](https://github.com/Camunda-Community-Hub/community/blob/main/extension-lifecycle.md#proof-of-concept-)
 
 # Camunda AI Agent customizations
@@ -12,17 +12,20 @@ Test project to demonstrate how to customize the Camunda [AI Agent connector](ht
 ## What's included?
 
 - An example of how to override specific parts of the AI Agent connector implementation. See [MyCustomAgentInitializer.java](src/main/java/io/camunda/example/aiagentruntime/MyCustomAgentInitializer.java)
-- A custom storage implementation for the AI Agent connector that stores conversations in a Postgres database. See [MyConversation.java](src/main/java/io/camunda/example/aiagentruntime/memory/conversation/MyConversation.java)
-    - This comes paired with a minimal UI to browse and follow conversations stored in the custom storage implementation.
+- A custom conversation storage implementation for the AI Agent connector that persists chat history in a Postgres database via JPA. See [MyConversationStore.java](src/main/java/io/camunda/example/aiagentruntime/memory/conversation/MyConversationStore.java).
+    - Implements the redesigned conversation storage SPI introduced in Camunda 8.10 (`createSession`, `loadMessages`/`storeMessages`, plus the `onJobCompleted` / `onJobCompletionFailed` completion callbacks).
+    - Persists each agent turn as an immutable row in a chain of message deltas: `storeMessages` only ever inserts a new row, never mutates the previous one. The full conversation history is reassembled on load by walking the parent chain with a recursive CTE.
+    - Updates a storage-side projection (`conversations.last_known_head_id`) inside `onJobCompleted` so the UI can resolve the live head of each conversation after Zeebe has committed the turn. Orphaned rows from rejected job completions are cleaned up best-effort in `onJobCompletionFailed`.
+    - Comes paired with a minimal React UI to browse and follow conversations stored in the custom storage implementation.
 - An example MCP client configuration in the `dev-mcp-client` Spring Boot profile
 
 ![Custom AI Agent conversation UI](doc/ai-agent-conversation-ui.png)
 
 ## Prerequisites
 
-- A Camunda 8.8.0 cluster (for example,
+- A Camunda 8.10.0 cluster (for example,
   using [Camunda 8 Run](https://docs.camunda.io/docs/next/self-managed/quickstart/developer-quickstart/c8run/))
-- Java 24 or higher
+- Java 25
 - A running Docker environment
 - The hybrid AI Agent connector element template:
     - [AI Agent Sub-process connector](https://raw.githubusercontent.com/camunda/connectors/refs/heads/main/connectors/agentic-ai/element-templates/hybrid/agenticai-aiagent-job-worker-hybrid.json)

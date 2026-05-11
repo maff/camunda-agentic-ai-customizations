@@ -1,61 +1,55 @@
 package io.camunda.example.aiagentruntime.memory.conversation;
 
-import io.camunda.connector.agenticai.aiagent.model.AgentJobContext;
-import io.camunda.connector.agenticai.model.message.Message;
+import io.camunda.connector.api.outbound.JobContext;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.type.SqlTypes;
 
+/**
+ * Parent entity: one row per logical conversation, keyed by the {@code conversationId} that {@link
+ * MyConversationContext} carries.
+ *
+ * <p>The {@code lastKnownHeadId} column is a storage-side projection of the live conversation head,
+ * updated by {@link MyConversationStore#onJobCompleted} after Zeebe has accepted the job-completion
+ * command. Because the projection only advances post-commit, it can be stale (if a callback fails
+ * to fire) but never points at an uncommitted turn.
+ */
 @Entity
-@Table(indexes = {@Index(name = "idx_conversation_id", columnList = "conversationId")})
+@Table(name = "conversations")
 public class MyConversation {
+
   @Id
-  @GeneratedValue(strategy = GenerationType.UUID)
+  @UuidGenerator(style = UuidGenerator.Style.VERSION_7)
   @Column(nullable = false)
   private UUID id;
 
-  private ZonedDateTime createdAt;
-  @UpdateTimestamp private ZonedDateTime updatedAt;
-
   @Column(nullable = false)
-  private UUID conversationId;
+  private ZonedDateTime createdAt;
+
+  @UpdateTimestamp
+  @Column(nullable = false)
+  private ZonedDateTime updatedAt;
 
   @JdbcTypeCode(SqlTypes.JSON)
-  @Column(nullable = false)
+  @Column(name = "job_context", nullable = false)
   private MyConversationJobContext jobContext;
 
-  @Column(nullable = false)
-  private boolean archived = false;
-
-  @JdbcTypeCode(SqlTypes.JSON)
-  @Column(nullable = false)
-  private List<Message> messages = new ArrayList<>();
+  @Column(name = "last_known_head_id")
+  private UUID lastKnownHeadId;
 
   protected MyConversation() {}
 
-  public MyConversation(UUID conversationId, MyConversationJobContext jobContext) {
-    this.conversationId = conversationId;
+  public MyConversation(MyConversationJobContext jobContext) {
     this.jobContext = jobContext;
     this.createdAt = ZonedDateTime.now();
-  }
-
-  public MyConversation(
-      UUID conversationId, MyConversationJobContext jobContext, MyConversation previous) {
-    this.conversationId = conversationId;
-    this.jobContext = jobContext;
-    this.createdAt = previous.createdAt;
   }
 
   public UUID getId() {
@@ -70,28 +64,16 @@ public class MyConversation {
     return updatedAt;
   }
 
-  public UUID getConversationId() {
-    return conversationId;
-  }
-
   public MyConversationJobContext getJobContext() {
     return jobContext;
   }
 
-  public boolean isArchived() {
-    return archived;
+  public UUID getLastKnownHeadId() {
+    return lastKnownHeadId;
   }
 
-  public void setArchived(boolean archived) {
-    this.archived = archived;
-  }
-
-  public List<Message> getMessages() {
-    return messages;
-  }
-
-  public void setMessages(List<Message> messages) {
-    this.messages = messages;
+  public void setLastKnownHeadId(UUID lastKnownHeadId) {
+    this.lastKnownHeadId = lastKnownHeadId;
   }
 
   @Embeddable
@@ -100,19 +82,17 @@ public class MyConversation {
       long processDefinitionKey,
       long processInstanceKey,
       String elementId,
-      long elementInstanceKey,
       String tenantId,
       String type) {
 
-    public static MyConversationJobContext from(AgentJobContext jobContext) {
+    public static MyConversationJobContext from(JobContext jobContext) {
       return new MyConversationJobContext(
-          jobContext.bpmnProcessId(),
-          jobContext.processDefinitionKey(),
-          jobContext.processInstanceKey(),
-          jobContext.elementId(),
-          jobContext.elementInstanceKey(),
-          jobContext.tenantId(),
-          jobContext.type());
+          jobContext.getBpmnProcessId(),
+          jobContext.getProcessDefinitionKey(),
+          jobContext.getProcessInstanceKey(),
+          jobContext.getElementId(),
+          jobContext.getTenantId(),
+          jobContext.getType());
     }
   }
 }

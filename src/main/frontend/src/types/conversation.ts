@@ -103,13 +103,13 @@ export const MessageSchema = z.discriminatedUnion('role', [
   ToolCallResultMessageSchema,
 ]);
 
-// Job context schema
+// Job context schema (process-level metadata snapshotted at conversation creation;
+// per-turn element instance key lives on the turn row, not here).
 export const JobContextSchema = z.object({
   bpmnProcessId: z.string(),
   processDefinitionKey: z.number(),
   processInstanceKey: z.number(),
   elementId: z.string(),
-  elementInstanceKey: z.number(),
   tenantId: z.string(),
   type: z.string(),
 });
