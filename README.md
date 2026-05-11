@@ -12,8 +12,11 @@ Test project to demonstrate how to customize the Camunda [AI Agent connector](ht
 ## What's included?
 
 - An example of how to override specific parts of the AI Agent connector implementation. See [MyCustomAgentInitializer.java](src/main/java/io/camunda/example/aiagentruntime/MyCustomAgentInitializer.java)
-- A custom storage implementation for the AI Agent connector that stores conversations in a Postgres database. See [MyConversation.java](src/main/java/io/camunda/example/aiagentruntime/memory/conversation/MyConversation.java)
-    - This comes paired with a minimal UI to browse and follow conversations stored in the custom storage implementation.
+- A custom conversation storage implementation for the AI Agent connector that persists chat history in a Postgres database via JPA. See [MyConversationStore.java](src/main/java/io/camunda/example/aiagentruntime/memory/conversation/MyConversationStore.java).
+    - Implements the redesigned conversation storage SPI introduced in Camunda 8.10 (`createSession`, `loadMessages`/`storeMessages`, plus the `onJobCompleted` / `onJobCompletionFailed` completion callbacks).
+    - Persists each agent turn as an immutable row in a chain of message deltas: `storeMessages` only ever inserts a new row, never mutates the previous one. The full conversation history is reassembled on load by walking the parent chain with a recursive CTE.
+    - Updates a storage-side projection (`conversations.last_known_head_id`) inside `onJobCompleted` so the UI can resolve the live head of each conversation after Zeebe has committed the turn. Orphaned rows from rejected job completions are cleaned up best-effort in `onJobCompletionFailed`.
+    - Comes paired with a minimal React UI to browse and follow conversations stored in the custom storage implementation.
 - An example MCP client configuration in the `dev-mcp-client` Spring Boot profile
 
 ![Custom AI Agent conversation UI](doc/ai-agent-conversation-ui.png)

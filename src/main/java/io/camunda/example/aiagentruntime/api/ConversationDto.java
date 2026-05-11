@@ -20,7 +20,6 @@ public record ConversationDto(
       long processDefinitionKey,
       long processInstanceKey,
       String elementId,
-      long elementInstanceKey,
       String tenantId,
       String type) {}
 }

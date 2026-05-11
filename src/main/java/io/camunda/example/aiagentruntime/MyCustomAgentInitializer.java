@@ -18,8 +18,7 @@ public class MyCustomAgentInitializer implements AgentInitializer {
   private final AgentInitializer delegate;
 
   public MyCustomAgentInitializer(
-      AgentToolsResolver agentToolsResolver,
-      GatewayToolHandlerRegistry gatewayToolHandlers) {
+      AgentToolsResolver agentToolsResolver, GatewayToolHandlerRegistry gatewayToolHandlers) {
     this.delegate = new AgentInitializerImpl(agentToolsResolver, gatewayToolHandlers);
   }
 

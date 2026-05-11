@@ -6,30 +6,38 @@ import io.camunda.connector.agenticai.model.message.UserMessage;
 import io.camunda.connector.agenticai.model.message.content.TextContent;
 import io.camunda.example.aiagentruntime.memory.conversation.MyConversation;
 import io.camunda.example.aiagentruntime.memory.conversation.MyConversation.MyConversationJobContext;
+import io.camunda.example.aiagentruntime.memory.conversation.MyConversationTurn;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ConversationMapper {
 
-  public ConversationListDto toListDto(MyConversation conversation) {
+  public ConversationListDto toListDto(MyConversation conversation, MyConversationTurn rootTurn) {
+    final var rootMessages = rootTurn != null ? rootTurn.getMessages() : List.<Message>of();
     return new ConversationListDto(
         conversation.getId(),
-        conversation.getConversationId(),
+        conversation.getId(),
         conversation.getCreatedAt(),
         conversation.getUpdatedAt(),
         conversation.getJobContext().bpmnProcessId(),
-        extractFirstUserMessage(conversation));
+        extractFirstUserMessage(rootMessages));
   }
 
-  public ConversationDto toDto(MyConversation conversation) {
+  public ConversationDto toDto(MyConversation conversation, List<MyConversationTurn> chain) {
+    final List<Message> messages = new ArrayList<>();
+    for (final var turn : chain) {
+      messages.addAll(turn.getMessages());
+    }
     return new ConversationDto(
         conversation.getId(),
-        conversation.getConversationId(),
+        conversation.getId(),
         conversation.getCreatedAt(),
         conversation.getUpdatedAt(),
         toJobContextDto(conversation.getJobContext()),
-        conversation.getMessages(),
-        extractFirstUserMessage(conversation));
+        messages,
+        extractFirstUserMessage(messages));
   }
 
   private ConversationDto.JobContextDto toJobContextDto(MyConversationJobContext jobContext) {
@@ -38,13 +46,12 @@ public class ConversationMapper {
         jobContext.processDefinitionKey(),
         jobContext.processInstanceKey(),
         jobContext.elementId(),
-        jobContext.elementInstanceKey(),
         jobContext.tenantId(),
         jobContext.type());
   }
 
-  private String extractFirstUserMessage(MyConversation conversation) {
-    return conversation.getMessages().stream()
+  private String extractFirstUserMessage(List<Message> messages) {
+    return messages.stream()
         .filter(message -> message instanceof UserMessage)
         .findFirst()
         .map(this::extractTextContent)
@@ -60,16 +67,11 @@ public class ConversationMapper {
       return "Empty message";
     }
 
-    // get first text content from the message
     return contentMessage.content().stream()
         .filter(content -> content instanceof TextContent)
         .map(content -> ((TextContent) content).text())
         .findFirst()
-        .map(
-            text -> {
-              // truncate if too long
-              return text.length() > 100 ? text.substring(0, 97) + "..." : text;
-            })
+        .map(text -> text.length() > 100 ? text.substring(0, 97) + "..." : text)
         .orElse("Non-text message");
   }
 }
