@@ -4,6 +4,7 @@ import { ChatMessage } from './ChatMessage';
 import { Loading, InlineNotification, Grid, Column } from '@carbon/react';
 import { ArrowLeft, ArrowUp } from '@carbon/icons-react';
 import { useEffect, useRef, useState } from 'react';
+import type { ReactElement } from 'react';
 import type { Conversation } from '@/types/conversation';
 
 const THINKING_WORDS = [
@@ -69,35 +70,30 @@ function isWaitingForToolResults(conversation: Conversation): boolean {
   if (!conversation.messages || conversation.messages.length === 0) {
     return false;
   }
-  
+
   const lastMessage = conversation.messages[conversation.messages.length - 1];
-  
+
   // Check if last message was an assistant message with tool calls
   return lastMessage.role === 'assistant' && !!lastMessage.toolCalls && lastMessage.toolCalls.length > 0;
+}
+
+// Picks a random thinking/tool-call verb once when mounted. Re-mount (via a fresh `key` from the
+// parent) re-rolls — that's intentional: each new agent activity gets a new verb.
+function ProgressIndicator({ waitingForTools }: { waitingForTools: boolean }): ReactElement {
+  const [thinkingWord] = useState(getRandomThinkingWord);
+  const [toolCallWord] = useState(getRandomToolCallWord);
+  return <>{waitingForTools ? toolCallWord : thinkingWord}...</>;
 }
 
 export function ConversationDetail() {
   const { conversationId } = useParams<{ conversationId: string }>();
   const { data: conversation, isLoading, error } = useConversation(conversationId!);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const thinkingWordRef = useRef<string>(getRandomThinkingWord());
-  const toolCallWordRef = useRef<string>(getRandomToolCallWord());
   const [showScrollToTop, setShowScrollToTop] = useState(false);
 
   useEffect(() => {
     if (conversation && messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [conversation]);
-
-  // Update thinking word when conversation progressing status changes
-  useEffect(() => {
-    if (conversation && isConversationProgressing(conversation)) {
-      if (isWaitingForToolResults(conversation)) {
-        toolCallWordRef.current = getRandomToolCallWord();
-      } else {
-        thinkingWordRef.current = getRandomThinkingWord();
-      }
     }
   }, [conversation]);
 
@@ -233,7 +229,12 @@ export function ConversationDetail() {
                     borderRadius: '50%',
                     animation: 'spin 1s linear infinite'
                   }} />
-                  <span>{isWaitingForToolResults(conversation) ? toolCallWordRef.current : thinkingWordRef.current}...</span>
+                  <span>
+                    <ProgressIndicator
+                      key={conversation.updatedAt}
+                      waitingForTools={isWaitingForToolResults(conversation)}
+                    />
+                  </span>
                   <style>{`
                     @keyframes spin {
                       0% { transform: rotate(0deg); }
