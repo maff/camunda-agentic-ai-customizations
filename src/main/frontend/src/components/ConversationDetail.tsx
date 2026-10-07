@@ -1,4 +1,4 @@
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router';
 import { useConversation } from '@/hooks/useConversations';
 import { ChatMessage } from './ChatMessage';
 import { Loading, InlineNotification, Grid, Column } from '@carbon/react';

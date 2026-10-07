@@ -22,8 +22,8 @@
         <version.connectors>8.10.0</version.connectors>
         <spotless-maven-plugin.version>3.4.0</spotless-maven-plugin.version>
         <frontend-maven-plugin.version>2.0.0</frontend-maven-plugin.version>
-        <node.version>v24.15.0</node.version>
-        <npm.version>11.12.1</npm.version>
+        <node.version>v24.21.0</node.version>
+        <npm.version>11.19.0</npm.version>
     </properties>
 
     <dependencies>
