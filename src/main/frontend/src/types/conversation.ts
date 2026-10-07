@@ -74,7 +74,7 @@ export const ToolCallResultSchema = z.object({
 
 // Message metadata schema: a timestamp plus provider specific entries (e.g. { openai: { responseId, stopReason } })
 export const MessageMetadataSchema = z.looseObject({
-  timestamp: z.number().optional(),
+  timestamp: z.string().optional(),
 });
 
 // Base message schema

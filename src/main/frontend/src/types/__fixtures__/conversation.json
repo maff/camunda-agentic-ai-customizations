@@ -1,0 +1,373 @@
+{
+  "id": "01a117bb-e324-73f7-9817-a87750c3f578",
+  "conversationId": "01a117bb-e324-73f7-9817-a87750c3f578",
+  "createdAt": "2026-10-07T18:59:11.768Z",
+  "updatedAt": "2026-10-07T18:59:51.360Z",
+  "jobContext": {
+    "bpmnProcessId": "ai-agent-chat-with-tools",
+    "processDefinitionKey": 2251799813685329,
+    "processInstanceKey": 6755399441055751,
+    "elementId": "AI_Agent",
+    "tenantId": "<default>",
+    "type": "mathias-sp-test"
+  },
+  "messages": [
+    {
+      "role": "system",
+      "id": "01a117bb-d5c6-7179-b283-b86c30713beb",
+      "content": [
+        {
+          "type": "text",
+          "text": "You are a helpful, generic chat agent which can answer a wide amount of questions based on your knowledge and an optional set of available tools.\n\nIf tools are provided, you should prefer them instead…"
+        }
+      ]
+    },
+    {
+      "role": "user",
+      "id": "01a117bb-d5c5-766d-b610-731bd399f753",
+      "content": [
+        {
+          "type": "text",
+          "text": "send ervin a joke"
+        },
+        {
+          "type": "document",
+          "document": {
+            "camunda.document.type": "camunda",
+            "storeId": "in-memory",
+            "documentId": "doc-1",
+            "contentHash": "abc",
+            "metadata": {
+              "contentType": "application/pdf",
+              "fileName": "a.pdf",
+              "size": 3
+            }
+          }
+        }
+      ],
+      "metadata": {
+        "timestamp": "2026-10-07T20:59:08.357605+02:00"
+      }
+    },
+    {
+      "role": "assistant",
+      "id": "01a117bb-e30b-7457-9ea7-2d49ec5a7f08",
+      "content": [
+        {
+          "type": "reasoning",
+          "provider": "openai",
+          "payload": {
+            "id": "rs_0c82c4938b6e1def016ac6967e6fe087d2bbb87a581e445e00",
+            "type": "reasoning",
+            "content": [],
+            "summary": [],
+            "encrypted_content": "gAAAAABqxpZ_K8uo635uWslHGmGowr5oEklcmbI-KE2n1h6RFI2EFXZ2jz70c6EkgU-IOIWFj6BwQV9iD91l6MxTYSYScKksYT4kWrj-7FAR96IuvzOeCCC-5fXvi1SraS5FROYiQOJOiUVMuQWZSaGxVs51m67SzJl8Yc1te1JfQDdRggLh5MZmakDWUCXwXdLBlSTA…"
+          }
+        }
+      ],
+      "toolCalls": [
+        {
+          "id": "call_ATHJ9IJ2yWt5zSp3Osn4skEG",
+          "name": "ListUsers",
+          "arguments": {}
+        },
+        {
+          "id": "call_v0kokfmrfDDLalWU99N0ESLS",
+          "name": "Jokes_API",
+          "arguments": {}
+        }
+      ],
+      "modelId": "gpt-5.5-2026-04-23",
+      "stopReason": "TOOL_USE",
+      "metadata": {
+        "openai": {
+          "responseId": "resp_0c82c4938b6e1def016ac6967d92d087d2bbaec3d567441f49",
+          "stopReason": "completed"
+        },
+        "timestamp": "2026-10-07T20:59:11.756036+02:00"
+      }
+    },
+    {
+      "role": "tool_call_result",
+      "id": "01a117bc-264d-7542-8a5d-3d857fe5386f",
+      "results": [
+        {
+          "id": "call_ATHJ9IJ2yWt5zSp3Osn4skEG",
+          "name": "ListUsers",
+          "content": [
+            {
+              "type": "object",
+              "content": [
+                {
+                  "id": 1,
+                  "name": "Leanne Graham",
+                  "username": "Bret"
+                },
+                {
+                  "id": 2,
+                  "name": "Ervin Howell",
+                  "username": "Antonette"
+                },
+                {
+                  "id": 3,
+                  "name": "Clementine Bauch",
+                  "username": "Samantha"
+                },
+                {
+                  "id": 4,
+                  "name": "Patricia Lebsack",
+                  "username": "Karianne"
+                },
+                {
+                  "id": 5,
+                  "name": "Chelsey Dietrich",
+                  "username": "Kamren"
+                },
+                {
+                  "id": 6,
+                  "name": "Mrs. Dennis Schulist",
+                  "username": "Leopoldo_Corkery"
+                },
+                {
+                  "id": 7,
+                  "name": "Kurtis Weissnat",
+                  "username": "Elwyn.Skiles"
+                },
+                {
+                  "id": 8,
+                  "name": "Nicholas Runolfsdottir V",
+                  "username": "Maxime_Nienow"
+                },
+                {
+                  "id": 9,
+                  "name": "Glenna Reichert",
+                  "username": "Delphine"
+                },
+                {
+                  "id": 10,
+                  "name": "Clementina DuBuque",
+                  "username": "Moriah.Stanton"
+                }
+              ]
+            }
+          ],
+          "elementId": "ListUsers",
+          "completedAt": "2026-10-07T20:59:28.704+02:00"
+        },
+        {
+          "id": "call_v0kokfmrfDDLalWU99N0ESLS",
+          "name": "Jokes_API",
+          "content": [
+            {
+              "type": "text",
+              "text": "What do you call 4 Mexicans in quicksand?\n\nQuatro Sinko."
+            }
+          ],
+          "elementId": "Jokes_API",
+          "completedAt": "2026-10-07T20:59:28.709+02:00"
+        }
+      ],
+      "metadata": {
+        "timestamp": "2026-10-07T20:59:28.974127+02:00"
+      }
+    },
+    {
+      "role": "assistant",
+      "id": "01a117bc-2cea-75fe-99bc-b3fec72d31eb",
+      "content": [
+        {
+          "type": "reasoning",
+          "provider": "openai",
+          "payload": {
+            "id": "rs_0c82c4938b6e1def016ac69691b7ec87d2b4fdb2cde6839bfe",
+            "type": "reasoning",
+            "content": [],
+            "summary": [],
+            "encrypted_content": "gAAAAABqxpaST8pf0FMduQTwVNl3gq2FHB91abdpboZLXjwV5bae0idRDnW_nOqP6APmA3gOmwG8imrP0L_DH9Wts9FhYps11nMnPuDuGjfwE58fXlQWS_J4YsambjunNm9ZR3l18OEX-iGLlzY6TvmZ4xmP1pAxdye_jJObqfQucd6FoFmKLMQsmwBiqk7uPFDyOW7s…"
+          }
+        }
+      ],
+      "toolCalls": [
+        {
+          "id": "call_jB3hffy92goy1ofezYmtwAmQ",
+          "name": "LoadUserByID",
+          "arguments": {
+            "id": 2
+          }
+        },
+        {
+          "id": "call_y0JEnp6ewSYDKu6duo9J62hL",
+          "name": "Jokes_API",
+          "arguments": {}
+        }
+      ],
+      "modelId": "gpt-5.5-2026-04-23",
+      "stopReason": "TOOL_USE",
+      "metadata": {
+        "openai": {
+          "responseId": "resp_0c82c4938b6e1def016ac696913f4087d288fb580f5a867564",
+          "stopReason": "completed"
+        },
+        "timestamp": "2026-10-07T20:59:30.666156+02:00"
+      }
+    },
+    {
+      "role": "tool_call_result",
+      "id": "01a117bc-2f50-77b7-8ce5-bcc7a7d7c9a5",
+      "results": [
+        {
+          "id": "call_jB3hffy92goy1ofezYmtwAmQ",
+          "name": "LoadUserByID",
+          "content": [
+            {
+              "type": "object",
+              "content": {
+                "id": 2,
+                "name": "Ervin Howell",
+                "email": "Shanna@melissa.tv",
+                "phone": "010-692-6593 x09125",
+                "address": {
+                  "geo": {
+                    "lat": "-43.9509",
+                    "lng": "-34.4618"
+                  },
+                  "city": "Wisokyburgh",
+                  "suite": "Suite 879",
+                  "street": "Victor Plains",
+                  "zipcode": "90566-7771"
+                },
+                "company": {
+                  "bs": "synergize scalable supply-chains",
+                  "name": "Deckow-Crist",
+                  "catchPhrase": "Proactive didactic contingency"
+                },
+                "website": "anastasia.net",
+                "username": "Antonette"
+              }
+            }
+          ],
+          "elementId": "LoadUserByID",
+          "completedAt": "2026-10-07T20:59:31.251+02:00"
+        },
+        {
+          "id": "call_y0JEnp6ewSYDKu6duo9J62hL",
+          "name": "Jokes_API",
+          "content": [
+            {
+              "type": "text",
+              "text": "Thank you student loans for getting me through college.\n\nI don't think I'll ever be able to repay you."
+            }
+          ],
+          "elementId": "Jokes_API",
+          "completedAt": "2026-10-07T20:59:30.868+02:00"
+        }
+      ],
+      "metadata": {
+        "timestamp": "2026-10-07T20:59:31.280196+02:00"
+      }
+    },
+    {
+      "role": "assistant",
+      "id": "01a117bc-395b-70a5-8481-e88243b821d0",
+      "content": [
+        {
+          "type": "reasoning",
+          "provider": "openai",
+          "payload": {
+            "id": "rs_0c82c4938b6e1def016ac6969484ec87d2b9f4cd301f86aca8",
+            "type": "reasoning",
+            "content": [],
+            "summary": [],
+            "encrypted_content": "gAAAAABqxpaVPFKkxTe-gxaDmKOMgoVRa-CnBbHRIUTcSqrh8EMYudKIAnVY98bkAFGWKHUvkBdMsM1-LpLmJCP8uiuR4VXcRI_Asdy4R_YT4UlJTSk2lf1FqqfHD4wLolkbBHf7Ojw71dGwsEUFSouesON2dlxBlki972rVHlrB-lGOHXcWEjnhcoUifYMnm86xPlcs…"
+          }
+        }
+      ],
+      "toolCalls": [
+        {
+          "id": "call_y8UtrGq37s9f3kpHEhmTtsOc",
+          "name": "AskHumanToSendEmail",
+          "arguments": {
+            "recipient_email": "Shanna@melissa.tv",
+            "email_subject": "A joke for you",
+            "email_body": "Thank you student loans for getting me through college.\n\nI don't think I'll ever be able to repay you.",
+            "recipient_name": "Ervin Howell",
+            "instructions": "Please send this lighthearted joke to Ervin Howell. I avoided sending an earlier joke that could be interpreted as targeting a nationality; use the joke in the email body below."
+          }
+        }
+      ],
+      "modelId": "gpt-5.5-2026-04-23",
+      "stopReason": "TOOL_USE",
+      "metadata": {
+        "openai": {
+          "responseId": "resp_0c82c4938b6e1def016ac69693a2b887d28d5fe671b7b8a3ac",
+          "stopReason": "completed"
+        },
+        "timestamp": "2026-10-07T20:59:33.851689+02:00"
+      }
+    },
+    {
+      "role": "tool_call_result",
+      "id": "01a117bc-6fe5-70e2-acf4-f3beb5f60a07",
+      "results": [
+        {
+          "id": "call_y8UtrGq37s9f3kpHEhmTtsOc",
+          "name": "AskHumanToSendEmail",
+          "content": [
+            {
+              "type": "object",
+              "content": {
+                "emailOk": false,
+                "operatorFeedback": "Need more emojis. And a spanish TX."
+              }
+            }
+          ],
+          "elementId": "AskHumanToSendEmail",
+          "completedAt": "2026-10-07T20:59:47.773+02:00"
+        }
+      ],
+      "metadata": {
+        "timestamp": "2026-10-07T20:59:47.813917+02:00"
+      }
+    },
+    {
+      "role": "assistant",
+      "id": "01a117bc-7d96-70fc-b6c1-a7d263a10bc5",
+      "content": [
+        {
+          "type": "reasoning",
+          "provider": "openai",
+          "payload": {
+            "id": "rs_0c82c4938b6e1def016ac696a4e53c87d28654b68783410613",
+            "type": "reasoning",
+            "content": [],
+            "summary": [],
+            "encrypted_content": "gAAAAABqxpanPGZxBDPbJ8KY3bb2h_kyzb5uH7-aUJvXyMNxBiFlSQVUpglLGepqI-Dii2VztytwLPud-TAhSmT0M3gT-yn1DyYeUbrihXWZ75e0OFEsEt_c-v4OoqPXWRX1jYyH2xnrVBKri_WWwaTnA1mOUny73DNeCAIYxGMML_iVwvakJiXWpl3i236aDTAJW8-I…"
+          }
+        }
+      ],
+      "toolCalls": [
+        {
+          "id": "call_GcnZ8oomOMcRtvTYoh51utT0",
+          "name": "AskHumanToSendEmail",
+          "arguments": {
+            "recipient_email": "Shanna@melissa.tv",
+            "email_subject": "Un chiste para ti 😂",
+            "email_body": "¡Hola Ervin! 👋\n\nThank you student loans for getting me through college. 🎓💸\n\nI don't think I'll ever be able to repay you. 😅😂\n\n¡Gracias y que tengas un gran día! 🇪🇸✨",
+            "recipient_name": "Ervin Howell",
+            "instructions": "Please send this email to Ervin Howell. Per operator feedback, I added more emojis and included Spanish text (subject/greeting/sign-off)."
+          }
+        }
+      ],
+      "modelId": "gpt-5.5-2026-04-23",
+      "stopReason": "TOOL_USE",
+      "metadata": {
+        "openai": {
+          "responseId": "resp_0c82c4938b6e1def016ac696a4238487d2aea56ce5260de599",
+          "stopReason": "completed"
+        },
+        "timestamp": "2026-10-07T20:59:51.318723+02:00"
+      }
+    }
+  ],
+  "firstUserMessage": "send ervin a joke"
+}
