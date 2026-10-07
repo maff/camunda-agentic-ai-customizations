@@ -8,7 +8,7 @@ import io.camunda.connector.agenticai.aiagent.memory.conversation.ConversationSe
 import io.camunda.connector.agenticai.aiagent.memory.conversation.ConversationStoreRequest;
 import io.camunda.connector.agenticai.aiagent.model.AgentContext;
 import io.camunda.connector.agenticai.aiagent.model.AgentExecutionContext;
-import io.camunda.connector.agenticai.model.message.Message;
+import io.camunda.connector.agenticai.aiagent.model.message.Message;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;

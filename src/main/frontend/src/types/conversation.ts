@@ -17,10 +17,41 @@ export const DocumentContentSchema = BaseContentSchema.extend({
   document: z.any(), // Document structure would need to be defined based on actual usage
 });
 
+// Object content schema (structured data, e.g. in tool call results)
+export const ObjectContentSchema = BaseContentSchema.extend({
+  type: z.literal('object'),
+  content: z.any(),
+});
+
+// Reasoning content schema (provider specific reasoning payload, e.g. encrypted reasoning items,
+// with an optional human readable summary in text)
+export const ReasoningContentSchema = BaseContentSchema.extend({
+  type: z.literal('reasoning'),
+  provider: z.string().nullable().optional(),
+  payload: z.any(),
+  text: z.string().nullable().optional(),
+});
+
+// Provider content schema (opaque provider specific content which is passed back to the provider)
+export const ProviderContentSchema = BaseContentSchema.extend({
+  type: z.literal('provider'),
+  provider: z.string().nullable().optional(),
+  payload: z.any(),
+});
+
+// Fallback for content types the UI does not know (yet), so unknown content never breaks the view
+export const GenericContentSchema = z.looseObject({
+  type: z.string(),
+});
+
 // Union of all content types
-export const ContentSchema = z.discriminatedUnion('type', [
+export const ContentSchema = z.union([
   TextContentSchema,
   DocumentContentSchema,
+  ObjectContentSchema,
+  ReasoningContentSchema,
+  ProviderContentSchema,
+  GenericContentSchema,
 ]);
 
 // Tool call schema
@@ -34,34 +65,22 @@ export const ToolCallSchema = z.object({
 export const ToolCallResultSchema = z.object({
   id: z.string().nullable(),
   name: z.string().nullable(),
+  // list of content blocks, e.g. { type: 'text', text } or { type: 'object', content }
   content: z.any().nullable(),
+  elementId: z.string().nullable().optional(),
+  completedAt: z.string().nullable().optional(),
   properties: z.record(z.string(), z.any()).optional(),
 });
 
-// Token usage schema
-export const TokenUsageSchema = z.object({
-  inputTokenCount: z.number(),
-  outputTokenCount: z.number(),
-  totalTokenCount: z.number(),
-});
-
-// Framework metadata schema
-export const FrameworkMetadataSchema = z.object({
-  id: z.string(),
-  modelName: z.string(),
-  tokenUsage: TokenUsageSchema,
-  finishReason: z.string(),
-});
-
-// Message metadata schema
-export const MessageMetadataSchema = z.object({
-  framework: FrameworkMetadataSchema.optional(),
+// Message metadata schema: a timestamp plus provider specific entries (e.g. { openai: { responseId, stopReason } })
+export const MessageMetadataSchema = z.looseObject({
   timestamp: z.number().optional(),
 });
 
 // Base message schema
 export const BaseMessageSchema = z.object({
-  metadata: z.record(z.string(), z.any()).optional(),
+  id: z.string().optional(),
+  metadata: MessageMetadataSchema.nullable().optional(),
 });
 
 // Content message schema (for messages that can have content)
@@ -85,6 +104,8 @@ export const UserMessageSchema = BaseMessageSchema.extend({
 // Assistant message schema
 export const AssistantMessageSchema = BaseMessageSchema.extend({
   role: z.literal('assistant'),
+  modelId: z.string().nullable().optional(),
+  stopReason: z.string().nullable().optional(),
   content: z.array(ContentSchema).optional(),
   toolCalls: z.array(ToolCallSchema).optional(),
 });
@@ -142,8 +163,9 @@ export type DocumentContent = z.infer<typeof DocumentContentSchema>;
 export type Content = z.infer<typeof ContentSchema>;
 export type ToolCall = z.infer<typeof ToolCallSchema>;
 export type ToolCallResult = z.infer<typeof ToolCallResultSchema>;
-export type TokenUsage = z.infer<typeof TokenUsageSchema>;
-export type FrameworkMetadata = z.infer<typeof FrameworkMetadataSchema>;
+export type ObjectContent = z.infer<typeof ObjectContentSchema>;
+export type ReasoningContent = z.infer<typeof ReasoningContentSchema>;
+export type ProviderContent = z.infer<typeof ProviderContentSchema>;
 export type MessageMetadata = z.infer<typeof MessageMetadataSchema>;
 export type BaseMessage = z.infer<typeof BaseMessageSchema>;
 export type ContentMessage = z.infer<typeof ContentMessageSchema>;

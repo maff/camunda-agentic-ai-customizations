@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { useConversations } from '@/hooks/useConversations';
 import { Loading, InlineNotification, Grid, Column } from '@carbon/react';
 import { ChevronRight } from '@carbon/icons-react';

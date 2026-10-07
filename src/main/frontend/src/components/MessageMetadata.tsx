@@ -1,20 +1,23 @@
 import { useState } from 'react';
-import type { MessageMetadata } from '@/types/conversation';
-import { Button, Tile } from '@carbon/react';
+import type { Message } from '@/types/conversation';
+import { Button, CodeSnippet, Tile } from '@carbon/react';
 import { ChevronDown, ChevronRight } from '@carbon/icons-react';
 
 interface MessageMetadataProps {
-  metadata?: MessageMetadata;
+  message: Message;
 }
 
-export function MessageMetadataComponent({ metadata }: MessageMetadataProps) {
+export function MessageMetadataComponent({ message }: MessageMetadataProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  if (!metadata?.framework) {
+  const { timestamp, ...providerMetadata } = message.metadata ?? {};
+  const modelId = message.role === 'assistant' ? message.modelId : undefined;
+  const stopReason = message.role === 'assistant' ? message.stopReason : undefined;
+  const hasProviderMetadata = Object.keys(providerMetadata).length > 0;
+
+  if (!timestamp && !modelId && !stopReason && !hasProviderMetadata) {
     return null;
   }
-
-  const { framework } = metadata;
 
   return (
     <div style={{ marginTop: '0.5rem' }}>
@@ -26,28 +29,30 @@ export function MessageMetadataComponent({ metadata }: MessageMetadataProps) {
       >
         Metadata
       </Button>
-      
+
       {isExpanded && (
         <Tile style={{ marginTop: '0.5rem', fontSize: '0.75rem', backgroundColor: '#f4f4f4' }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.5rem' }}>
-            <div>
-              <span style={{ fontWeight: '600' }}>Model:</span> {framework.modelName}
-            </div>
-            <div>
-              <span style={{ fontWeight: '600' }}>Finish Reason:</span> {framework.finishReason}
-            </div>
-            {framework.tokenUsage && (
-              <>
-                <div>
-                  <span style={{ fontWeight: '600' }}>Input Tokens:</span> {framework.tokenUsage.inputTokenCount}
-                </div>
-                <div>
-                  <span style={{ fontWeight: '600' }}>Output Tokens:</span> {framework.tokenUsage.outputTokenCount}
-                </div>
-                <div style={{ gridColumn: 'span 2' }}>
-                  <span style={{ fontWeight: '600' }}>Total Tokens:</span> {framework.tokenUsage.totalTokenCount}
-                </div>
-              </>
+            {modelId && (
+              <div>
+                <span style={{ fontWeight: '600' }}>Model:</span> {modelId}
+              </div>
+            )}
+            {stopReason && (
+              <div>
+                <span style={{ fontWeight: '600' }}>Stop Reason:</span> {stopReason}
+              </div>
+            )}
+            {typeof timestamp === 'number' && (
+              <div>
+                <span style={{ fontWeight: '600' }}>Time:</span> {new Date(timestamp * 1000).toLocaleString()}
+              </div>
+            )}
+            {hasProviderMetadata && (
+              <div style={{ gridColumn: 'span 2' }}>
+                <span style={{ fontWeight: '600' }}>Provider:</span>
+                <CodeSnippet type="multi">{JSON.stringify(providerMetadata, null, 2)}</CodeSnippet>
+              </div>
             )}
           </div>
         </Tile>

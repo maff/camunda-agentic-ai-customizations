@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router';
 import { ConversationList } from './components/ConversationList';
 import { ConversationDetail } from './components/ConversationDetail';
 import { Content } from '@carbon/react';

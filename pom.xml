@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.0.6</version>
+        <version>4.1.1</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -19,11 +19,13 @@
 
     <properties>
         <java.version>25</java.version>
-        <version.connectors>8.10.0-SNAPSHOT</version.connectors>
+        <version.connectors>8.10.0</version.connectors>
+        <!-- the Camunda client's gRPC classes are generated with Protobuf 4.36.x; Spring Boot's managed version is older and makes job activation fail at runtime -->
+        <protobuf-java.version>4.36.2</protobuf-java.version>
         <spotless-maven-plugin.version>3.4.0</spotless-maven-plugin.version>
         <frontend-maven-plugin.version>2.0.0</frontend-maven-plugin.version>
-        <node.version>v24.15.0</node.version>
-        <npm.version>11.12.1</npm.version>
+        <node.version>v24.21.0</node.version>
+        <npm.version>11.19.0</npm.version>
     </properties>
 
     <dependencies>
@@ -49,8 +51,8 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-core</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-flyway</artifactId>
         </dependency>
         <dependency>
             <groupId>org.flywaydb</groupId>
@@ -71,6 +73,21 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-testcontainers</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers-postgresql</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers-junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

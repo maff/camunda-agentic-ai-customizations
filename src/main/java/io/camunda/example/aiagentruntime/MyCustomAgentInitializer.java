@@ -4,6 +4,8 @@ import io.camunda.connector.agenticai.aiagent.agent.AgentInitializationResult;
 import io.camunda.connector.agenticai.aiagent.agent.AgentInitializer;
 import io.camunda.connector.agenticai.aiagent.agent.AgentInitializerImpl;
 import io.camunda.connector.agenticai.aiagent.agent.AgentToolsResolver;
+import io.camunda.connector.agenticai.aiagent.agent.ToolCallResultCompletedAtResolver;
+import io.camunda.connector.agenticai.aiagent.agentinstance.AgentInstanceClient;
 import io.camunda.connector.agenticai.aiagent.model.AgentExecutionContext;
 import io.camunda.connector.agenticai.aiagent.tool.GatewayToolHandlerRegistry;
 import org.slf4j.Logger;
@@ -18,8 +20,15 @@ public class MyCustomAgentInitializer implements AgentInitializer {
   private final AgentInitializer delegate;
 
   public MyCustomAgentInitializer(
-      AgentToolsResolver agentToolsResolver, GatewayToolHandlerRegistry gatewayToolHandlers) {
-    this.delegate = new AgentInitializerImpl(agentToolsResolver, gatewayToolHandlers);
+      AgentToolsResolver agentToolsResolver,
+      GatewayToolHandlerRegistry gatewayToolHandlers,
+      AgentInstanceClient agentInstanceClient) {
+    this.delegate =
+        new AgentInitializerImpl(
+            agentToolsResolver,
+            gatewayToolHandlers,
+            agentInstanceClient,
+            new ToolCallResultCompletedAtResolver());
   }
 
   @Override
