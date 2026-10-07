@@ -27,7 +27,7 @@ mvn clean package
 
 ## Testing
 
-`CustomizationsContextTest` is a Spring context smoke test (PostgreSQL Testcontainer, requires Docker; no Camunda cluster needed). It checks that the custom initializer, conversation store and chat model factory are wired, and that `MyConversationContext` round-trips on the connector runtime's object mappers. End-to-end verification is manual: start the app and exercise the agent through the UI.
+`CustomizationsContextTest` is a Spring context smoke test (PostgreSQL Testcontainer, requires Docker; no Camunda cluster needed). It checks that the custom initializer, conversation store, chat model factory and system prompt contributor are wired, and that `MyConversationContext` round-trips on the connector runtime's object mappers. End-to-end verification is manual: start the app and exercise the agent through the UI.
 
 ## Architecture
 
@@ -38,6 +38,7 @@ The project follows Spring Boot conventions with these key customization points:
 - **AiAgentRuntimeApplication**: Main Spring Boot application class
 - **MyCustomAgentInitializer**: Custom agent initializer that wraps the default implementation with logging
 - **ConversationContextSubTypesBeanPostProcessor**: Registers `MyConversationContext` as a Jackson subtype on every `ObjectMapper` bean (the connector runtime's mappers are not reachable through Boot's Jackson customizers)
+- **MyCustomSystemPromptContributor**: `SystemPromptContributor` bean that appends the current date and the BPMN process id to the agent's system prompt
 - **UppercaseChatModelFactory** / **UppercaseChatModel** (`chatmodel/`): Custom chat model provider (`custom` provider type `uppercase`); builds a native OpenAI model from the provider parameters and upper-cases its text responses
 
 ### Custom Conversation Storage

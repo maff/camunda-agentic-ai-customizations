@@ -7,14 +7,20 @@ import io.camunda.connector.agenticai.aiagent.agent.AgentInitializer;
 import io.camunda.connector.agenticai.aiagent.chatmodel.ChatModelRegistry;
 import io.camunda.connector.agenticai.aiagent.memory.conversation.ConversationContext;
 import io.camunda.connector.agenticai.aiagent.memory.conversation.ConversationStore;
+import io.camunda.connector.agenticai.aiagent.model.AgentContext;
+import io.camunda.connector.agenticai.aiagent.model.AgentExecutionContext;
 import io.camunda.connector.agenticai.aiagent.model.request.v2.CustomProviderConfiguration;
+import io.camunda.connector.agenticai.aiagent.systemprompt.SystemPromptContributor;
+import io.camunda.connector.api.outbound.JobContext;
 import io.camunda.example.aiagentruntime.chatmodel.UppercaseChatModel;
 import io.camunda.example.aiagentruntime.memory.conversation.MyConversationContext;
 import io.camunda.example.aiagentruntime.memory.conversation.MyConversationStore;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
@@ -42,6 +48,7 @@ class CustomizationsContextTest {
   @Autowired AgentInitializer agentInitializer;
   @Autowired List<ConversationStore> conversationStores;
   @Autowired ChatModelRegistry chatModelRegistry;
+  @Autowired List<SystemPromptContributor> systemPromptContributors;
 
   @Test
   void customInitializerReplacesDefault() {
@@ -65,6 +72,24 @@ class CustomizationsContextTest {
     try (final var chatModel = chatModelRegistry.resolve(configuration)) {
       assertThat(chatModel).isInstanceOf(UppercaseChatModel.class);
     }
+  }
+
+  @Test
+  void customSystemPromptContributorAddsDateAndProcess() {
+    final var jobContext = Mockito.mock(JobContext.class);
+    Mockito.when(jobContext.getBpmnProcessId()).thenReturn("my-process");
+    final var executionContext = Mockito.mock(AgentExecutionContext.class);
+    Mockito.when(executionContext.jobContext()).thenReturn(jobContext);
+
+    assertThat(systemPromptContributors)
+        .filteredOn(MyCustomSystemPromptContributor.class::isInstance)
+        .singleElement()
+        .satisfies(
+            contributor ->
+                assertThat(
+                        contributor.contribute(executionContext, Mockito.mock(AgentContext.class)))
+                    .contains(LocalDate.now().toString())
+                    .contains("my-process"));
   }
 
   @Test

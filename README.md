@@ -18,6 +18,7 @@ Test project to demonstrate how to customize the Camunda [AI Agent connector](ht
     - Updates a storage-side projection (`conversations.last_known_head_id`) inside `onJobCompleted` so the UI can resolve the live head of each conversation after Zeebe has committed the turn. Orphaned rows from rejected job completions are cleaned up best-effort in `onJobCompletionFailed`.
     - Comes paired with a minimal React UI to browse and follow conversations stored in the custom storage implementation.
 - A custom chat model provider (`uppercase`) that wraps the native OpenAI provider and upper-cases the assistant's text. See [UppercaseChatModelFactory.java](src/main/java/io/camunda/example/aiagentruntime/chatmodel/UppercaseChatModelFactory.java).
+- A system prompt contributor that tells the model today's date and the process it is running in. See [MyCustomSystemPromptContributor.java](src/main/java/io/camunda/example/aiagentruntime/MyCustomSystemPromptContributor.java).
 - An example MCP client configuration in the `dev-mcp-client` Spring Boot profile
 
 ![Custom AI Agent conversation UI](doc/ai-agent-conversation-ui.png)
