@@ -2,6 +2,7 @@ package io.camunda.example.aiagentruntime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.camunda.connector.agenticai.aiagent.agent.AgentInitializer;
 import io.camunda.connector.agenticai.aiagent.chatmodel.ChatModelRegistry;
@@ -9,10 +10,13 @@ import io.camunda.connector.agenticai.aiagent.memory.conversation.ConversationCo
 import io.camunda.connector.agenticai.aiagent.memory.conversation.ConversationStore;
 import io.camunda.connector.agenticai.aiagent.model.AgentContext;
 import io.camunda.connector.agenticai.aiagent.model.AgentExecutionContext;
+import io.camunda.connector.agenticai.aiagent.model.message.Message;
 import io.camunda.connector.agenticai.aiagent.model.request.v2.CustomProviderConfiguration;
 import io.camunda.connector.agenticai.aiagent.systemprompt.SystemPromptContributor;
+import io.camunda.connector.api.document.DocumentFactory;
 import io.camunda.connector.api.outbound.JobContext;
 import io.camunda.example.aiagentruntime.chatmodel.UppercaseChatModel;
+import io.camunda.example.aiagentruntime.config.HibernateConfig;
 import io.camunda.example.aiagentruntime.memory.conversation.MyConversationContext;
 import io.camunda.example.aiagentruntime.memory.conversation.MyConversationStore;
 import java.time.LocalDate;
@@ -49,6 +53,7 @@ class CustomizationsContextTest {
   @Autowired List<ConversationStore> conversationStores;
   @Autowired ChatModelRegistry chatModelRegistry;
   @Autowired List<SystemPromptContributor> systemPromptContributors;
+  @Autowired DocumentFactory documentFactory;
 
   @Test
   void camundaClientGrpcClassesAreCompatibleWithProtobufRuntime() {
@@ -58,6 +63,25 @@ class CustomizationsContextTest {
             io.camunda.zeebe.gateway.protocol.GatewayOuterClass.ActivateJobsRequest
                 .getDefaultInstance())
         .isNotNull();
+  }
+
+  @Test
+  void storedMessagesWithDocumentsRoundTripAsJson() throws Exception {
+    final var json =
+        """
+        [{"role":"user","content":[
+          {"type":"text","text":"summarize this"},
+          {"type":"document","document":{
+            "camunda.document.type":"camunda","storeId":"in-memory","documentId":"doc-1",
+            "contentHash":"abc","metadata":{"contentType":"application/pdf","fileName":"a.pdf","size":3}}}
+        ]}]
+        """;
+    final var mapper = HibernateConfig.createMessageObjectMapper(documentFactory);
+
+    final var messages = mapper.readValue(json, new TypeReference<List<Message>>() {});
+    final var serialized = mapper.writeValueAsString(messages);
+
+    assertThat(serialized).contains("doc-1").contains("a.pdf").contains("summarize this");
   }
 
   @Test
