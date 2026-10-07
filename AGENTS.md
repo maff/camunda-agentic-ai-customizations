@@ -27,7 +27,7 @@ mvn clean package
 
 ## Testing
 
-`CustomizationsContextTest` is a Spring context smoke test (PostgreSQL Testcontainer, requires Docker; no Camunda cluster needed). It checks that the custom initializer, conversation store, chat model factory and system prompt contributor are wired, and that `MyConversationContext` round-trips on the connector runtime's object mappers. End-to-end verification is manual: start the app and exercise the agent through the UI.
+`CustomizationsContextTest` is a Spring context smoke test (PostgreSQL Testcontainer, requires Docker; no Camunda cluster needed). It checks that the custom initializer, conversation store, chat model factory and system prompt contributor are wired, and that `MyConversationContext` round-trips on the connector runtime's object mappers. `src/main/frontend/src/types/conversation.test.ts` (Vitest, run by `mvn test` and `npm test`) parses a captured API response with the UI's Zod schema; refresh `__fixtures__/conversation.json` when the backend's message format changes. End-to-end verification is manual: start the app and exercise the agent through the UI.
 
 ## Architecture
 

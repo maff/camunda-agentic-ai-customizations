@@ -110,7 +110,7 @@ The agent's answers are then returned in upper case.
 
 ## Tests
 
-`mvn verify` runs a Spring context test (`CustomizationsContextTest`) which starts the application against a PostgreSQL Testcontainer (requires Docker) and verifies that the customizations are wired into the AI Agent connector. It does not need a Camunda cluster.
+`mvn verify` runs a Spring context test (`CustomizationsContextTest`) which starts the application against a PostgreSQL Testcontainer (requires Docker) and verifies that the customizations are wired into the AI Agent connector. It does not need a Camunda cluster. It also runs the frontend's Vitest suite, which checks that the UI's schema parses a captured API response.
 
 ## Frontend Development Setup
 
