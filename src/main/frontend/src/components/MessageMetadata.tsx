@@ -43,9 +43,9 @@ export function MessageMetadataComponent({ message }: MessageMetadataProps) {
                 <span style={{ fontWeight: '600' }}>Stop Reason:</span> {stopReason}
               </div>
             )}
-            {typeof timestamp === 'number' && (
+            {(typeof timestamp === 'number' || typeof timestamp === 'string') && (
               <div>
-                <span style={{ fontWeight: '600' }}>Time:</span> {new Date(timestamp * 1000).toLocaleString()}
+                <span style={{ fontWeight: '600' }}>Time:</span> {new Date(typeof timestamp === 'number' ? timestamp * 1000 : timestamp).toLocaleString()}
               </div>
             )}
             {hasProviderMetadata && (
