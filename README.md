@@ -17,6 +17,7 @@ Test project to demonstrate how to customize the Camunda [AI Agent connector](ht
     - Persists each agent turn as an immutable row in a chain of message deltas: `storeMessages` only ever inserts a new row, never mutates the previous one. The full conversation history is reassembled on load by walking the parent chain with a recursive CTE.
     - Updates a storage-side projection (`conversations.last_known_head_id`) inside `onJobCompleted` so the UI can resolve the live head of each conversation after Zeebe has committed the turn. Orphaned rows from rejected job completions are cleaned up best-effort in `onJobCompletionFailed`.
     - Comes paired with a minimal React UI to browse and follow conversations stored in the custom storage implementation.
+- A custom chat model provider (`uppercase`) that wraps the native OpenAI provider and upper-cases the assistant's text. See [UppercaseChatModelFactory.java](src/main/java/io/camunda/example/aiagentruntime/chatmodel/UppercaseChatModelFactory.java).
 - An example MCP client configuration in the `dev-mcp-client` Spring Boot profile
 
 ![Custom AI Agent conversation UI](doc/ai-agent-conversation-ui.png)
@@ -27,9 +28,9 @@ Test project to demonstrate how to customize the Camunda [AI Agent connector](ht
   using [Camunda 8 Run](https://docs.camunda.io/docs/next/self-managed/quickstart/developer-quickstart/c8run/))
 - Java 25
 - A running Docker environment
-- The hybrid AI Agent connector element template:
-    - [AI Agent Sub-process connector](https://raw.githubusercontent.com/camunda/connectors/refs/heads/main/connectors/agentic-ai/element-templates/hybrid/agenticai-aiagent-job-worker-hybrid.json)
-    - [AI Agent Task connector](https://raw.githubusercontent.com/camunda/connectors/refs/heads/main/connectors/agentic-ai/element-templates/hybrid/agenticai-aiagent-outbound-connector-hybrid.json)
+- The hybrid (v2) AI Agent connector element templates:
+    - [AI Agent Sub-process connector](https://raw.githubusercontent.com/camunda/connectors/refs/heads/stable/8.10/connectors/agentic-ai/element-templates/hybrid/agenticai-ai-agent-subprocess.v2-hybrid.json)
+    - [AI Agent Task connector](https://raw.githubusercontent.com/camunda/connectors/refs/heads/stable/8.10/connectors/agentic-ai/element-templates/hybrid/agenticai-ai-agent-task.v2-hybrid.json)
 
 ## Running the example
 
@@ -43,11 +44,11 @@ Spring Boot's `docker compose` support.
 # build the project
 mvn clean package
 
-# set a custom AI Agent Process connector type
-export CONNECTOR_AI_AGENT_JOB_WORKER_TYPE=io.camunda.agenticai:aiagent-job-worker:hybrid1
+# set a custom AI Agent Sub-process connector type
+export CONNECTOR_AI_AGENT_SUBPROCESS_TYPE=io.camunda.agenticai:aiagent:subprocess:hybrid1
 
 # set a custom AI Agent Task connector type
-export CONNECTOR_AI_AGENT_TYPE=io.camunda.agenticai:aiagent:hybrid1
+export CONNECTOR_AI_AGENT_TASK_TYPE=io.camunda.agenticai:aiagent:task:hybrid1
 
 # export any env variables which should be available as secrets to the AI Agent connector
 export OPENAI_API_KEY=your_openai_api_key
@@ -71,7 +72,7 @@ the [chat agent examples](https://github.com/camunda/connectors/tree/main/connec
 provided with the AI Agent connector implementation.
 
 - Apply the `Hybrid AI Agent Sub-process` element template to your AI Agent ad-hoc sub-process to override the task definition type.
-- Set Task definition type to `io.camunda.agenticai:aiagent-job-worker:hybrid1` (or the value of the `CONNECTOR_AI_AGENT_JOB_WORKER_TYPE` environment variable in case you used another value).
+- Set Task definition type to `io.camunda.agenticai:aiagent:subprocess:hybrid1` (or the value of the `CONNECTOR_AI_AGENT_SUBPROCESS_TYPE` environment variable in case you used another value).
 
 #### AI Agent Task
 
@@ -82,7 +83,7 @@ the [chat agent examples](https://github.com/camunda/connectors/tree/main/connec
 provided with the AI Agent connector implementation.
 
 - Apply the `Hybrid AI Agent Task` element template to your AI Agent task to override the task definition type.
-- Set Task definition type to `io.camunda.agenticai:aiagent:hybrid1` (or the value of the `CONNECTOR_AI_AGENT_TYPE` environment variable in case you used another value).
+- Set Task definition type to `io.camunda.agenticai:aiagent:task:hybrid1` (or the value of the `CONNECTOR_AI_AGENT_TASK_TYPE` environment variable in case you used another value).
 
 ### Configuring the AI Agent to use the custom storage
 
@@ -92,6 +93,21 @@ The following applies to both AI Agent implementations:
 - Configure the `Implementation type` to the type exposed by the custom store implementation: `my-conversation`
 
 After applying these changes, you should be able to start a process and follow the conversation on the UI exposed by this project.
+
+### Configuring the AI Agent to use the custom chat model
+
+The following applies to both AI Agent implementations (v2 templates):
+
+- In the `Model provider` group, set the `Provider` to `Custom Implementation (Self-Managed/Hybrid only)`.
+- Set `Provider type` to `uppercase`.
+- Set `Model` to an OpenAI model ID, for example `gpt-5.4-mini`.
+- Set `Provider parameters` to `={apiKey: "{{secrets.OPENAI_API_KEY}}"}`.
+
+The agent's answers are then returned in upper case.
+
+## Tests
+
+`mvn verify` runs a Spring context test (`CustomizationsContextTest`) which starts the application against a PostgreSQL Testcontainer (requires Docker) and verifies that the customizations are wired into the AI Agent connector. It does not need a Camunda cluster.
 
 ## Frontend Development Setup
 
