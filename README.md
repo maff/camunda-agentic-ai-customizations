@@ -52,7 +52,9 @@ export CONNECTOR_AI_AGENT_SUBPROCESS_TYPE=io.camunda.agenticai:aiagent:subproces
 export CONNECTOR_AI_AGENT_TASK_TYPE=io.camunda.agenticai:aiagent:task:hybrid1
 
 # export any env variables which should be available as secrets to the AI Agent connector
-export OPENAI_API_KEY=your_openai_api_key
+# (the connector runtime only exposes environment variables with the `SECRET_` prefix, so
+# `SECRET_OPENAI_API_KEY` is available as `{{secrets.OPENAI_API_KEY}}`)
+export SECRET_OPENAI_API_KEY=your_openai_api_key
 
 # run the example in the dev profile
 mvn spring-boot:run -Dspring-boot.run.profiles=dev
