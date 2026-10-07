@@ -1,6 +1,6 @@
 package io.camunda.example.aiagentruntime.memory.conversation;
 
-import io.camunda.connector.agenticai.model.message.Message;
+import io.camunda.connector.agenticai.aiagent.model.message.Message;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

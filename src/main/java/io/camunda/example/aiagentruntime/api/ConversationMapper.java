@@ -1,9 +1,9 @@
 package io.camunda.example.aiagentruntime.api;
 
-import io.camunda.connector.agenticai.model.message.ContentMessage;
-import io.camunda.connector.agenticai.model.message.Message;
-import io.camunda.connector.agenticai.model.message.UserMessage;
-import io.camunda.connector.agenticai.model.message.content.TextContent;
+import io.camunda.connector.agenticai.aiagent.model.message.ContentMessage;
+import io.camunda.connector.agenticai.aiagent.model.message.Message;
+import io.camunda.connector.agenticai.aiagent.model.message.UserMessage;
+import io.camunda.connector.agenticai.aiagent.model.message.content.TextContent;
 import io.camunda.example.aiagentruntime.memory.conversation.MyConversation;
 import io.camunda.example.aiagentruntime.memory.conversation.MyConversation.MyConversationJobContext;
 import io.camunda.example.aiagentruntime.memory.conversation.MyConversationTurn;
