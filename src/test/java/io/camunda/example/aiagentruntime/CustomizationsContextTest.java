@@ -51,6 +51,16 @@ class CustomizationsContextTest {
   @Autowired List<SystemPromptContributor> systemPromptContributors;
 
   @Test
+  void camundaClientGrpcClassesAreCompatibleWithProtobufRuntime() {
+    // fails with a ProtobufRuntimeVersionException if the Protobuf runtime is older than the
+    // version the Camunda client's gRPC classes were generated with
+    assertThat(
+            io.camunda.zeebe.gateway.protocol.GatewayOuterClass.ActivateJobsRequest
+                .getDefaultInstance())
+        .isNotNull();
+  }
+
+  @Test
   void customInitializerReplacesDefault() {
     assertThat(agentInitializer).isInstanceOf(MyCustomAgentInitializer.class);
   }

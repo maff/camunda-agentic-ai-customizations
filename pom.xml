@@ -20,6 +20,8 @@
     <properties>
         <java.version>25</java.version>
         <version.connectors>8.10.0</version.connectors>
+        <!-- the Camunda client's gRPC classes are generated with Protobuf 4.36.x; Spring Boot's managed version is older and makes job activation fail at runtime -->
+        <protobuf-java.version>4.36.2</protobuf-java.version>
         <spotless-maven-plugin.version>3.4.0</spotless-maven-plugin.version>
         <frontend-maven-plugin.version>2.0.0</frontend-maven-plugin.version>
         <node.version>v24.21.0</node.version>
