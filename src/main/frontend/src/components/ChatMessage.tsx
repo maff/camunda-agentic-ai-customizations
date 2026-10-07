@@ -19,7 +19,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
     }
 
     return contentMessage.content.map((content, index) => {
-      if (content.type === 'text') {
+      if (content.type === 'text' && typeof content.text === 'string') {
         return (
           <div key={index} style={{ whiteSpace: 'pre-wrap' }}>
             {content.text}
@@ -32,6 +32,29 @@ export function ChatMessage({ message }: ChatMessageProps) {
         </div>
       );
     });
+  };
+
+  // Tool results are lists of content blocks: { type: 'text', text } or { type: 'object', content }
+  const formatToolResultContent = (content: unknown): string => {
+    if (typeof content === 'string') {
+      return content;
+    }
+    if (Array.isArray(content)) {
+      return content
+        .map((block) => {
+          if (block && typeof block === 'object' && 'type' in block) {
+            if (block.type === 'text' && 'text' in block && typeof block.text === 'string') {
+              return block.text;
+            }
+            if (block.type === 'object' && 'content' in block) {
+              return JSON.stringify(block.content, null, 2);
+            }
+          }
+          return JSON.stringify(block, null, 2);
+        })
+        .join('\n');
+    }
+    return JSON.stringify(content, null, 2);
   };
 
   const renderToolCalls = () => {
@@ -78,9 +101,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
           <Tile key={index} style={{ marginBottom: '0.5rem', backgroundColor: '#f4ffed' }}>
             <div style={{ fontSize: '0.875rem', fontWeight: '500', color: '#198038', marginBottom: '0.25rem' }}>{result.name}</div>
             <CodeSnippet type="multi">
-              {typeof result.content === 'string' 
-                ? result.content 
-                : JSON.stringify(result.content, null, 2)}
+              {formatToolResultContent(result.content)}
             </CodeSnippet>
           </Tile>
         ))}
@@ -122,7 +143,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
           {renderContent()}
           {renderToolCalls()}
           {renderToolResults()}
-          <MessageMetadataComponent metadata={message.metadata} />
+          <MessageMetadataComponent message={message} />
         </Tile>
       </div>
     </div>
