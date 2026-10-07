@@ -36,7 +36,7 @@ import org.testcontainers.postgresql.PostgreSQLContainer;
 class CustomizationsContextTest {
 
   @Container @ServiceConnection
-  static final PostgreSQLContainer POSTGRES = new PostgreSQLContainer("postgres:17-alpine");
+  static final PostgreSQLContainer POSTGRES = new PostgreSQLContainer("postgres:18");
 
   @Autowired ApplicationContext context;
   @Autowired AgentInitializer agentInitializer;
