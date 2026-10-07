@@ -1,4 +1,6 @@
 import type { Message, Content } from '@/types/conversation';
+import { ContentBlock } from './ContentBlock';
+import { isContentBlock } from './contentUtils';
 import { MessageMetadataComponent } from './MessageMetadata';
 import { Tile, CodeSnippet } from '@carbon/react';
 
@@ -18,43 +20,11 @@ export function ChatMessage({ message }: ChatMessageProps) {
       return <span style={{ color: '#6f6f6f', fontStyle: 'italic' }}>No content</span>;
     }
 
-    return contentMessage.content.map((content, index) => {
-      if (content.type === 'text' && typeof content.text === 'string') {
-        return (
-          <div key={index} style={{ whiteSpace: 'pre-wrap' }}>
-            {content.text}
-          </div>
-        );
-      }
-      return (
-        <div key={index} style={{ color: '#6f6f6f', fontStyle: 'italic' }}>
-          [{content.type} content]
-        </div>
-      );
-    });
-  };
-
-  // Tool results are lists of content blocks: { type: 'text', text } or { type: 'object', content }
-  const formatToolResultContent = (content: unknown): string => {
-    if (typeof content === 'string') {
-      return content;
-    }
-    if (Array.isArray(content)) {
-      return content
-        .map((block) => {
-          if (block && typeof block === 'object' && 'type' in block) {
-            if (block.type === 'text' && 'text' in block && typeof block.text === 'string') {
-              return block.text;
-            }
-            if (block.type === 'object' && 'content' in block) {
-              return JSON.stringify(block.content, null, 2);
-            }
-          }
-          return JSON.stringify(block, null, 2);
-        })
-        .join('\n');
-    }
-    return JSON.stringify(content, null, 2);
+    return contentMessage.content.map((content, index) => (
+      <div key={index} style={{ marginBottom: index < contentMessage.content.length - 1 ? '0.5rem' : 0 }}>
+        <ContentBlock content={content} />
+      </div>
+    ));
   };
 
   const renderToolCalls = () => {
@@ -99,10 +69,29 @@ export function ChatMessage({ message }: ChatMessageProps) {
         <div style={{ fontSize: '0.75rem', color: '#525252', marginBottom: '0.5rem', fontWeight: '600' }}>Tool Results:</div>
         {toolResultMessage.results.map((result, index) => (
           <Tile key={index} style={{ marginBottom: '0.5rem', backgroundColor: '#f4ffed' }}>
-            <div style={{ fontSize: '0.875rem', fontWeight: '500', color: '#198038', marginBottom: '0.25rem' }}>{result.name}</div>
-            <CodeSnippet type="multi">
-              {formatToolResultContent(result.content)}
-            </CodeSnippet>
+            <div style={{ fontSize: '0.875rem', fontWeight: '500', color: '#198038', marginBottom: '0.25rem' }}>
+              {result.name}
+              {result.completedAt && (
+                <span style={{ marginLeft: '0.5rem', fontWeight: '400', color: '#525252' }}>
+                  {new Date(result.completedAt).toLocaleString()}
+                </span>
+              )}
+            </div>
+            {Array.isArray(result.content) ? (
+              result.content.map((block, blockIndex) => (
+                <div key={blockIndex} style={{ marginBottom: '0.25rem' }}>
+                  {isContentBlock(block) ? (
+                    <ContentBlock content={block} />
+                  ) : (
+                    <CodeSnippet type="multi">{JSON.stringify(block, null, 2)}</CodeSnippet>
+                  )}
+                </div>
+              ))
+            ) : (
+              <CodeSnippet type="multi">
+                {typeof result.content === 'string' ? result.content : JSON.stringify(result.content, null, 2)}
+              </CodeSnippet>
+            )}
           </Tile>
         ))}
       </div>
@@ -137,7 +126,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
     <div style={{ marginBottom: '1rem', ...getMessageAlignment() }}>
       <div style={{ maxWidth: '100%', width: '100%' }}>
         <div style={{ fontSize: '0.75rem', color: '#6f6f6f', marginBottom: '0.25rem', paddingLeft: '0.25rem', textTransform: 'capitalize' }}>
-          {message.role.replace('_', ' ')}
+          {message.role.replaceAll('_', ' ')}
         </div>
         <Tile style={{ ...getMessageStyle(), padding: '1rem' }}>
           {renderContent()}

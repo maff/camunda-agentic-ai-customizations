@@ -206,7 +206,7 @@ export function ConversationDetail() {
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               {conversation.messages.map((message, index) => (
-                <ChatMessage key={index} message={message} />
+                <ChatMessage key={message.id ?? index} message={message} />
               ))}
               
               {isConversationProgressing(conversation) && (

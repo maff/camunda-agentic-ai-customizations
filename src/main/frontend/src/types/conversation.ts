@@ -17,9 +17,24 @@ export const DocumentContentSchema = BaseContentSchema.extend({
   document: z.any(), // Document structure would need to be defined based on actual usage
 });
 
-// Reasoning content schema (provider specific reasoning payload, e.g. encrypted reasoning items)
+// Object content schema (structured data, e.g. in tool call results)
+export const ObjectContentSchema = BaseContentSchema.extend({
+  type: z.literal('object'),
+  content: z.any(),
+});
+
+// Reasoning content schema (provider specific reasoning payload, e.g. encrypted reasoning items,
+// with an optional human readable summary in text)
 export const ReasoningContentSchema = BaseContentSchema.extend({
   type: z.literal('reasoning'),
+  provider: z.string().nullable().optional(),
+  payload: z.any(),
+  text: z.string().nullable().optional(),
+});
+
+// Provider content schema (opaque provider specific content which is passed back to the provider)
+export const ProviderContentSchema = BaseContentSchema.extend({
+  type: z.literal('provider'),
   provider: z.string().nullable().optional(),
   payload: z.any(),
 });
@@ -33,7 +48,9 @@ export const GenericContentSchema = z.looseObject({
 export const ContentSchema = z.union([
   TextContentSchema,
   DocumentContentSchema,
+  ObjectContentSchema,
   ReasoningContentSchema,
+  ProviderContentSchema,
   GenericContentSchema,
 ]);
 
@@ -146,7 +163,9 @@ export type DocumentContent = z.infer<typeof DocumentContentSchema>;
 export type Content = z.infer<typeof ContentSchema>;
 export type ToolCall = z.infer<typeof ToolCallSchema>;
 export type ToolCallResult = z.infer<typeof ToolCallResultSchema>;
+export type ObjectContent = z.infer<typeof ObjectContentSchema>;
 export type ReasoningContent = z.infer<typeof ReasoningContentSchema>;
+export type ProviderContent = z.infer<typeof ProviderContentSchema>;
 export type MessageMetadata = z.infer<typeof MessageMetadataSchema>;
 export type BaseMessage = z.infer<typeof BaseMessageSchema>;
 export type ContentMessage = z.infer<typeof ContentMessageSchema>;
