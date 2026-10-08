@@ -11,7 +11,7 @@ Test project to demonstrate how to customize the Camunda [AI Agent connector](ht
 
 ## What's included?
 
-- An example of how to override specific parts of the AI Agent connector implementation. See [MyCustomAgentInitializer.java](src/main/java/io/camunda/example/aiagentruntime/MyCustomAgentInitializer.java)
+- An example of how to decorate a part of the AI Agent connector implementation: a `BeanPostProcessor` wraps the connector's `AgentInitializer` bean with logging. See [AgentInitializerDecoratingBeanPostProcessor.java](src/main/java/io/camunda/example/aiagentruntime/AgentInitializerDecoratingBeanPostProcessor.java) and [LoggingAgentInitializer.java](src/main/java/io/camunda/example/aiagentruntime/LoggingAgentInitializer.java)
 - A custom conversation storage implementation for the AI Agent connector that persists chat history in a Postgres database via JPA. See [MyConversationStore.java](src/main/java/io/camunda/example/aiagentruntime/memory/conversation/MyConversationStore.java).
     - Implements the redesigned conversation storage SPI introduced in Camunda 8.10 (`createSession`, `loadMessages`/`storeMessages`, plus the `onJobCompleted` / `onJobCompletionFailed` completion callbacks).
     - Persists each agent turn as an immutable row in a chain of message deltas: `storeMessages` only ever inserts a new row, never mutates the previous one. The full conversation history is reassembled on load by walking the parent chain with a recursive CTE.

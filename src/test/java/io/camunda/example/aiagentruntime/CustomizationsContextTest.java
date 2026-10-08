@@ -86,8 +86,8 @@ class CustomizationsContextTest {
   }
 
   @Test
-  void customInitializerReplacesDefault() {
-    assertThat(agentInitializer).isInstanceOf(MyCustomAgentInitializer.class);
+  void agentInitializerIsDecorated() {
+    assertThat(agentInitializer).isInstanceOf(LoggingAgentInitializer.class);
   }
 
   @Test
