@@ -36,7 +36,7 @@ The project follows Spring Boot conventions with these key customization points:
 ### Core Components
 
 - **AiAgentRuntimeApplication**: Main Spring Boot application class
-- **MyCustomAgentInitializer**: Custom agent initializer that wraps the default implementation with logging
+- **LoggingAgentInitializer** / **AgentInitializerDecoratingBeanPostProcessor**: Decorates the connector's default `AgentInitializer` bean with logging (a `BeanPostProcessor` wraps the existing bean, so the connector's implementation class is not referenced)
 - **ConversationContextSubTypesBeanPostProcessor**: Registers `MyConversationContext` as a Jackson subtype on every `ObjectMapper` bean (the connector runtime's mappers are not reachable through Boot's Jackson customizers)
 - **MyCustomSystemPromptContributor**: `SystemPromptContributor` bean that appends the current date and the BPMN process id to the agent's system prompt
 - **UppercaseChatModelFactory** / **UppercaseChatModel** (`chatmodel/`): Custom chat model provider (`custom` provider type `uppercase`); builds a native OpenAI model from the provider parameters and upper-cases its text responses
